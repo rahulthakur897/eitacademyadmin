@@ -1,26 +1,31 @@
 "use client";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 import { SignInSchema } from "@/validation/authValidation";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { adminLogin } from "@/redux/actions/user";
+import { useSelector } from "react-redux";
 
 export default function Login() {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const { loading } = useSelector((state: any) => state.user);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: SignInSchema,
     onSubmit: (values) => {
-      console.log('==>', values);
-      sessionStorage.setItem("isAdminLoggedIn", "true");
+      dispatch(adminLogin(values));
       router.push("/dashboard");
     },
   });
 
-  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =formik;
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = formik;
 
   const isActive =
     values.email &&
@@ -103,17 +108,22 @@ export default function Login() {
           )}
         </div>
 
-        {/* LOGIN BUTTON */}
         <Button
           type="submit"
-          disabled={!isActive}
-          className={`w-full text-[15px] font-medium py-3 rounded-lg transition ${
-            isActive
-              ? "bg-blue-600 text-white hover:bg-[#003b7d]"
-              : "bg-blue-300 text-white cursor-not-allowed"
-          }`}
+          disabled={!isActive || loading}
+          className={`w-full text-[15px] font-medium py-3 rounded-lg transition flex items-center justify-center gap-2 cursor ${isActive && !loading
+            ? "bg-blue-600 text-white hover:bg-[#003b7d]"
+            : "bg-blue-300 text-white cursor-not-allowed"
+            }`}
         >
-          Login
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin" size={18} />
+              Logging in...
+            </>
+          ) : (
+            "Login"
+          )}
         </Button>
 
         {/* FOOTER */}

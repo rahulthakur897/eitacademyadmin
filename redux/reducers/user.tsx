@@ -1,11 +1,15 @@
+import { ADMIN_LOGIN_SUCCESS } from "../constant";
 import { API_CALLING } from "../constant/common";
 
 const initialState = {
-  bookList: [],
-
+  loading: false,
+  adminData: {},
+  errorData: {},
+  isAuth: false,
 };
 
-export const userReducer = (state = initialState, action: any) => {
+
+export const userReducer = (state = initialState, action : any) => {
   switch (action.type) {
     case API_CALLING:
       return {
@@ -14,7 +18,14 @@ export const userReducer = (state = initialState, action: any) => {
       };
 
 
-  
+ case ADMIN_LOGIN_SUCCESS: {
+      return {
+        ...state,
+        adminData: action.response,
+        isAuth: true,
+      };
+    }
+
     default:
       return state;
   }

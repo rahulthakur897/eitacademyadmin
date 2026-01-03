@@ -7,10 +7,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node / Package manager
 node_modules
+package.json
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Next.js
+.next
+out
 dist
 dist-ssr
 *.local
+
+# Environment files
+.env
+.env.local
+.env.*.local
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +36,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import DataTable from "@/components/common/table";
-import EmployeeForm from "@/components/common/EmployeeForm";
+import EmployeeForm from "@/components/common/CoursesForm";
 import DeleteEmployee from "@/components/common/EmployeeDeleteDialog";
 
 const employeesList = [

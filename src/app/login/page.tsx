@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
-import { SignInSchema } from "@/validation/authValidation";
+import { SignInSchema } from "@/utils/validation";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { adminLogin } from "@/redux/actions/user";
+import { adminLogin } from "../redux/actions/user";
 import { useSelector } from "react-redux";
 
 export default function Login() {

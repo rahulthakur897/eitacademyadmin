@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import DataTable from "@/components/common/table";
-import EmployeeForm from "@/components/common/EmployeeForm";
 import DeleteEmployee from "@/components/common/EmployeeDeleteDialog";
+import Courses from "@/components/common/CoursesForm";
+import { fetchCategory } from "@/app/redux/actions/category";
+import { fetchCourses} from "@/app/redux/actions/course";
 
 const employeesList = [
   {
@@ -107,7 +110,7 @@ const employeesList = [
   },
 ];
 
-export default function EmployeeDirectory() {
+export default function CoursesPage() {
   const [employeeData, setEmployeeData] = useState(employeesList);
 
   const [openSheet, setOpenSheet] = useState(false);
@@ -117,15 +120,23 @@ export default function EmployeeDirectory() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const dispatch = useDispatch();
+
+useEffect(() => {
+    dispatch(fetchCategory());
+    dispatch(fetchCourses());
+  }, [dispatch]);
+  
+  const { categoryData } = useSelector((state: any) => state.category);
+  const { courseList,errorData } = useSelector((state: any) => console.log(state.courseReducer));
 
   // SEARCH FILTER
-  const filteredEmployees = employeeData.filter((emp) => {
+  // console.log("courseList",courseList)
+  const filteredRecords = (employeeData|| []).filter((list) => {
     const q = searchQuery.toLowerCase();
 
     return (
-      emp.name.toLowerCase().includes(q) ||
-      emp.email.toLowerCase().includes(q) ||
-      emp.phone.includes(q)
+      list.name.toLowerCase().includes(q) 
     );
   });
 
@@ -152,6 +163,7 @@ export default function EmployeeDirectory() {
   // HANDLE FORM SUBMIT (ADD / EDIT)
   const handleSave = (data: any) => {
     if (mode === "add") {
+      
       setEmployeeData((prev) => [
         ...prev,
         { id: prev.length + 1, ...data }
@@ -193,7 +205,7 @@ export default function EmployeeDirectory() {
             onClick={handleAdd}
             className="bg-red-600 text-white font-semibold px-3 py-2 rounded-md text-[12px] hover:bg-red-700 transition"
           >
-            + Add Employee
+            + Add 
           </button>
 
         </div>
@@ -207,18 +219,19 @@ export default function EmployeeDirectory() {
           { colname: "position", value: "Position" },
           { colname: "action", value: "Action" }
         ]}
-        rows={filteredEmployees}
+        rows={filteredRecords}
         editModal={handleEdit}
         delRecord={handleDelete}
         pageName="employee"
       />
 
       {/* ADD / EDIT FORM */}
-      <EmployeeForm
+      <Courses
         open={openSheet}
         onClose={() => setOpenSheet(false)}
         onSubmit={handleSave}
         defaultValues={selectedEmployee}
+        categoryList= {categoryData}
       />
 
       {/* DELETE DIALOG */}

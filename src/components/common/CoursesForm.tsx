@@ -24,7 +24,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-
+import {generateSlug} from '@/utils/common';
 interface CoursesProps {
     open: boolean;
     onClose: () => void;
@@ -55,20 +55,33 @@ export default function Courses({
         course_language: '',
         instructor_support: '',
         course_advantage: '',
-        couse_faq: ''
+        couse_faq: '',
+        slug:''
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+  const [isSlugEdited, setIsSlugEdited] = useState(false);
 
-    const handleChange = (e: any) => {
-        console.log("e--", e.target.name)
-        const { name, value } = e.target;
+    const handleChange = (name : string, value: any) => {
+        // const { name, value } = e.target;
+        setFormData((prev: any) => {
+    let updated = { ...prev, [name]: value };
 
-        setFormData({ ...formData, [name]: value });
+    if (name === "name" && !isSlugEdited && value.trim()) {
+      updated.slug = generateSlug(value);
+    }
 
-        // clear error on change
+    return updated;
+  });
+
         setErrors({ ...errors, [name]: "" });
     };
+    // Handle slug change - mark as edited manually
+const handleSlugChange = (value:any) => {
+  setFormData({ ...formData, ['slug']: value });
+  setIsSlugEdited(true);
+};
+
     const [image, setImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(
         defaultValues?.course_logo || "/assets/images/icons/empty.png"
@@ -89,13 +102,13 @@ export default function Courses({
     // Image preview logic
     useEffect(() => {
         if (formData?.course_logo) {
-            const url = URL.createObjectURL(formData?.course_logo);
+            const url = URL.createObjectURL(`/assets/images/course/${formData?.course_logo}`);
             setPreviewUrl(url);
             return () => URL.revokeObjectURL(url);
         } else if (defaultValues?.course_logo) {
-            setPreviewUrl(defaultValues.course_logo);
+            setPreviewUrl(`/assets/images/course/${defaultValues.course_logo}`);
         } else {
-            setPreviewUrl("/assets/images/curriculum.png");
+            setPreviewUrl("/assets/images/icons/Empty.png");
         }
     }, [formData, defaultValues]);
 
@@ -134,18 +147,17 @@ export default function Courses({
                 course_language: '',
                 instructor_support: '',
                 course_advantage: '',
-                couse_faq: ''
+                couse_faq: '',
+                slug:""
             })
         }
     }, [defaultValues, open]);
 
     // Submit
     const handleSave = () => {
-        const newEmployee = {
+       
 
-        };
-
-        onSubmit?.(newEmployee);
+        onSubmit?.(formData);
         onClose();
     };
 
@@ -170,8 +182,19 @@ export default function Courses({
                             name="name"
                             type="text"
                             value={formData?.name}
-                            onChange={handleChange}
+                            onChange={(e)=>handleChange("name", e.target.value)}
                             placeholder="Enter course name"
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <Label className="text-sm font-semibold text-gray-800">Slug</Label>
+                        <Input
+                            name="slug"
+                            type="text"
+                            value={formData?.slug}
+                            
+                            onChange={handleSlugChange}
+                            placeholder="Enter slug"
                         />
                     </div>
                     <div className="row flex gap-4">
@@ -180,7 +203,8 @@ export default function Courses({
                             <select
                                 name="category_id"
                                 value={formData.category_id}
-                                onChange={handleChange}
+                                 onChange={(e)=>handleChange("category_id", e.target.value)}
+                                
                                 className="p-3 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#E8774D] bg-white"
                             >
                                 {categoryList?.map((list: any) =>
@@ -197,9 +221,10 @@ export default function Courses({
                             <Input
                                 name="price"
                                 type="number"
+                                 onChange={(e)=>handleChange("price", e.target.value)}
                                 value={formData.price}
                                   min="0"
-                                onChange={handleChange}
+                              
                                 placeholder="example@mysrl.com"
                             />
                         </div>
@@ -211,7 +236,8 @@ export default function Courses({
                                 name="duration"
                                 type="text"
                                 value={formData.duration}
-                                onChange={handleChange}
+                              
+                                 onChange={(e)=>handleChange("duration", e.target.value)}
                                 placeholder="2.5 hours etc"
                             />
 
@@ -223,7 +249,8 @@ export default function Courses({
                                  type="number"
                                    min="1"
                                 value={formData.module_count}
-                                onChange={handleChange}
+                             
+                                 onChange={(e)=>handleChange("module_count", e.target.value)}
                                 placeholder="2 or 5 etc"
                             />
                         </div>
@@ -235,7 +262,7 @@ export default function Courses({
                              name="course_level"
                                 type="text"
                                 value={formData.course_level}
-                                onChange={handleChange}
+                                onChange={(e)=>handleChange("course_level", e.target.value)}
                                 placeholder="beginner, intermediate"
                             />
 
@@ -246,10 +273,10 @@ export default function Courses({
                             <select
                                 name="provide_certificate"
                                 value={formData.provide_certificate}
-                                onChange={handleChange}
+                               onChange={(e)=>handleChange("provide_certificate", e.target.value)}
                                 className="p-3 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#E8774D] bg-white"
                             >
-                                <option value={"0"} selected disabled> Select</option>
+                                <option value={"0"}> Select</option>
                                 <option value={"Yes"} key={1}>Yes</option>
                                 <option value={"No"} key={2}>No</option>
                             </select>
@@ -262,7 +289,7 @@ export default function Courses({
                                 name="course_language"
                                 type="text"
                                 value={formData.course_language}
-                                onChange={handleChange}
+                                 onChange={(e)=>handleChange("course_language", e.target.value)}
                                 placeholder="English, Hindi .."
                             />
 
@@ -273,10 +300,10 @@ export default function Courses({
                             <select
                                 name="instructor_support"
                                 value={formData.instructor_support}
-                                onChange={handleChange}
+                               onChange={(e)=>handleChange("instructor_support", e.target.value)}
                                 className="p-3 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#E8774D] bg-white"
                             >
-                                <option value={""} key={0} selected disabled> Select</option>
+                                <option value={""} key={0}> Select</option>
                                 <option value={"Yes"} key={1}>Yes</option>
                                 <option value={"No"} key={2}>No</option>
                             </select>
@@ -284,19 +311,19 @@ export default function Courses({
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Short description</Label>
-                        <ReactQuill theme="snow" value={formData?.shortdesc} name="shortdesc" onChange={handleChange} />
+                        <ReactQuill theme="snow" value={formData?.shortdesc}  onChange={(value) =>handleChange("shortdesc", value)} />
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Overview</Label>
-                        <ReactQuill theme="snow" value={formData?.overview} name="overview" onChange={handleChange} />
+                        <ReactQuill theme="snow" value={formData?.overview} onChange={(value) => handleChange("overview", value)} />
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Course Advantage</Label>
-                        <ReactQuill theme="snow" value={formData?.course_advantage} name="course_advantage" onChange={handleChange} />
+                        <ReactQuill theme="snow" value={formData?.course_advantage} onChange={ (value) =>handleChange("course_advantage", value)} />
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Couse Faq</Label>
-                        <ReactQuill theme="snow" value={formData?.couse_faq} name="couse_faq" onChange={handleChange} />
+                        <ReactQuill theme="snow" value={formData?.couse_faq} onChange={(value) => handleChange("couse_faq", value)} />
                     </div>
                     {/* IMAGE UPLOAD */}
                     <div className="flex items-start gap-4 mb-5">
@@ -314,7 +341,7 @@ export default function Courses({
                                 PNG or JPEG (Min 1080×600px)
                             </p>
 
-                            {image || previewUrl !== "/assets/images/icons/empty.png" ? (
+                            {image || previewUrl !== "/assets/images/icons/Empty.png" ? (
                                 <div className="flex gap-2">
                                     <button
                                         className="px-3 py-1 border border-red-500 text-red-500 rounded-md text-sm"

@@ -151,7 +151,11 @@ export default function DataTable({
 
                     return (
                       <TableCell key={col.colname} className="text-gray-800">
-                        {col.colname !== "action" && (value ?? "-")}
+                        {col.colname ==="shortdesc" && (
+                          <div className="w-32 whitespace-normal">{value}</div>
+                        )
+                        }
+                        {col.colname !== "action" && col.colname !=="shortdesc" && (value ?? "-")}
 
                         {col.colname === "action" && (
                           <div>

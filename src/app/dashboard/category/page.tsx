@@ -96,6 +96,7 @@ useEffect(() => {
         columns={[
           { colname: "idx", value: "S No." },
           { colname: "name", value: "Name" },
+          { colname: "slug", value: "Slug" },
           { colname: "action", value: "Action" },
         ]}
         rows={filteredData}

@@ -1,5 +1,9 @@
 import { put } from "redux-saga/effects";
 import {
+  ADD_COURSE,
+  ADD_COURSE_SUCCESS,
+  DELETE_COURSE,
+  DELETE_COURSE_SUCCESS,
   FETCH_COURSES,
   FETCH_COURSES_SUCCESS
 } from "../constant";
@@ -23,20 +27,21 @@ function* fetchCourses() {
   }
 }
 
-// function* addCategory(data) {
-//   try {
-//     yield put({ type: API_CALLING });
-//     const response = yield Api.post(BASEURL, `/category/add`, data.payload);
-//     const apiResponse = response.data;
-//     yield put({ type: ADD_CATEGORY_SUCCESS, response: {id: apiResponse?.data, name: data.payload.name} });
-//   } catch (error) {
-//     const errorObj = {
-//       status: 401,
-//       statusText: "Invalid Request",
-//     };
-//     yield put({ type: ADD_CATEGORY_FAILURE, error: errorObj });
-//   }
-// }
+function* addCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.post(BASEURL, `/course/add`, data.payload);
+    const apiResponse = response.data;
+    const returObj ={...data.payload, id:apiResponse?.data}
+    yield put({ type: ADD_COURSE_SUCCESS, response:  returObj });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
 
 // function* updateCategory(data) {
 //   try {
@@ -53,20 +58,22 @@ function* fetchCourses() {
 //   }
 // }
 
-// function* deleteCategory(data) {
-//   try {
-//     yield put({ type: API_CALLING });
-//     const response = yield Api.delete(BASEURL, `/category/delete/${data.payload}`);
-//     const apiResponse = response.data;
-//     yield put({ type: DELETE_CATEGORY_SUCCESS, response: data.payload });
-//   } catch (error) {
-//     const errorObj = {
-//       status: 401,
-//       statusText: "Invalid Request",
-//     };
-//     yield put({ type: API_FAILURE, error: errorObj });
-//   }
-// }
+function* deleteCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.delete(BASEURL, `/course/delete/${data.payload}`);
+    
+    yield put({ type: DELETE_COURSE_SUCCESS, response: data.payload });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
 export function* getCoursesSaga() {
   yield takeLatest(FETCH_COURSES, fetchCourses);
+  yield takeLatest(ADD_COURSE, addCourse);
+  yield takeLatest(DELETE_COURSE, deleteCourse);
 }

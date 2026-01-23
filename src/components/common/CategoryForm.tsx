@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
+import { generateSlug } from '@/utils/common';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Folder } from "lucide-react";
@@ -29,20 +29,42 @@ export default function CategoryForm({
   onSave,
 }: Props) {
   const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [isSlugEdited, setIsSlugEdited] = useState(false);
 
   useEffect(() => {
     if (mode === "edit" && record) {
       setName(record?.name);
+      setSlug(record?.slug)
     } else {
       setName("");
+       setSlug("")
     }
   }, [mode, record]);
 
   const handleSubmit = () => {
     if (!name.trim()) return;
-    onSave({ name , id : record?.id ||0 });
+    onSave({ name , id : record?.id ||0 , slug});
     onClose();
   };
+
+// Handle name change - auto-generate slug if not manually edited
+const handleNameChange = (value) => {
+  setName(value);
+  
+  // Only auto-generate slug if user hasn't manually edited it
+  if (!isSlugEdited && value.trim()) {
+    const generatedSlug = generateSlug(value);
+    setSlug(generatedSlug);
+  }
+};
+
+// Handle slug change - mark as edited manually
+const handleSlugChange = (value) => {
+  setSlug(value);
+  setIsSlugEdited(true);
+};
+
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -61,12 +83,22 @@ export default function CategoryForm({
             </Label>
             <Input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+             onChange={(e) => handleNameChange(e.target.value)}
               placeholder="Enter category name"
               className="border-blue-500 focus:ring-blue-600 focus:border-blue-600"
             />
           </div>
-
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-semibold text-gray-800 mb-2">
+              Slug
+            </Label>
+            <Input
+              value={slug}
+               onChange={(e) => handleSlugChange(e.target.value)}
+              placeholder="Enter slug"
+              className="border-blue-500 focus:ring-blue-600 focus:border-blue-600"
+            />
+          </div>
           {/* BUTTONS */}
           <div className="flex justify-end gap-3 pt-2">
 

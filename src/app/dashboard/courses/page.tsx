@@ -3,121 +3,19 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DataTable from "@/components/common/table";
-import DeleteEmployee from "@/components/common/EmployeeDeleteDialog";
+
 import Courses from "@/components/common/CoursesForm";
 import { fetchCategory } from "@/app/redux/actions/category";
-import { fetchCourses} from "@/app/redux/actions/course";
-
-const employeesList = [
-  {
-    id: 1,
-    name: "Aarav Sharma",
-    email: "aarav.sharma@mysrl.com",
-    phone: "9876543210",
-    position: "Senior Supervisor",
-    password: "Aarav@123",
-    joiningDate: "2023-04-10"
-  },
-  {
-    id: 2,
-    name: "Siya Patel",
-    email: "siya.patel@mysrl.com",
-    phone: "9123456780",
-    position: "Store Coordinator",
-    password: "Siya#890",
-    joiningDate: "2022-11-25"
-  },
-  {
-    id: 3,
-    name: "Kabir Mehta",
-    email: "kabir.mehta@mysrl.com",
-    phone: "9988776655",
-    position: "Junior Sales Exec",
-    password: "Kabir!456",
-    joiningDate: "2024-01-08"
-  },
-  {
-    id: 4,
-    name: "Myra Rao",
-    email: "myra.rao@mysrl.com",
-    phone: "9090909090",
-    position: "Assistant Manager",
-    password: "Myra@909",
-    joiningDate: "2023-08-19"
-  },
-  {
-    id: 5,
-    name: "Vivaan Khanna",
-    email: "vivaan.khanna@mysrl.com",
-    phone: "8080808080",
-    position: "Senior Sales Exec",
-    password: "Vivaan#808",
-    joiningDate: "2021-06-30"
-  },
-  {
-    id: 6,
-    name: "Anaya Chopra",
-    email: "anaya.chopra@mysrl.com",
-    phone: "9123123123",
-    position: "Front Desk Staff",
-    password: "Anaya$123",
-    joiningDate: "2022-09-14"
-  },
-  {
-    id: 7,
-    name: "Reyansh Desai",
-    email: "reyansh.desai@mysrl.com",
-    phone: "9001122334",
-    position: "Inventory Assistant",
-    password: "Reyan@001",
-    joiningDate: "2023-02-05"
-  },
-  {
-    id: 7,
-    name: "Reyansh Desai",
-    email: "reyansh.desai@mysrl.com",
-    phone: "9001122334",
-    position: "Inventory Assistant",
-    password: "Reyan@001",
-    joiningDate: "2023-02-05"
-  },
-  {
-    id: 7,
-    name: "Reyansh Desai",
-    email: "reyansh.desai@mysrl.com",
-    phone: "9001122334",
-    position: "Inventory Assistant",
-    password: "Reyan@001",
-    joiningDate: "2023-02-05"
-  },
-  {
-    id: 7,
-    name: "Reyansh Desai",
-    email: "reyansh.desai@mysrl.com",
-    phone: "9001122334",
-    position: "Inventory Assistant",
-    password: "Reyan@001",
-    joiningDate: "2023-02-05"
-  },
-  {
-    id: 7,
-    name: "Reyansh Desai",
-    email: "reyansh.desai@mysrl.com",
-    phone: "9001122334",
-    position: "Inventory Assistant",
-    password: "Reyan@001",
-    joiningDate: "2023-02-05"
-  },
-];
+import { fetchCourses, addCourse, deleteCourse} from "@/app/redux/actions/course";
+import { toast } from "sonner";
+import DeleteCourse from "@/components/common/DeleteCourse";
 
 export default function CoursesPage() {
-  const [employeeData, setEmployeeData] = useState(employeesList);
-
   const [openSheet, setOpenSheet] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const [mode, setMode] = useState<"add" | "edit">("add");
-  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [selectedRecord, setSelectedRecord] = useState<any>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
@@ -128,13 +26,22 @@ useEffect(() => {
   }, [dispatch]);
   
   const { categoryData } = useSelector((state: any) => state.category);
-  const { courseList,errorData } = useSelector((state: any) => console.log(state.courseReducer));
+  const { courseList, errorData } = useSelector((state: any) => state.course);
+ // Combine all data into a common list
+  const getCombinedList = () => {
+    return courseList.map(clist => {
+      const category = categoryData.find((cats: any) => cats.id === parseInt(clist.category_id));
+      return {
+        ...clist,
+        category_name: category ? category.name : 'Unknown Category',
+      };
+    });
+  };
 
+  const combinedList = getCombinedList();
   // SEARCH FILTER
-  // console.log("courseList",courseList)
-  const filteredRecords = (employeeData|| []).filter((list) => {
+  const filteredRecords = (combinedList|| []).filter((list) => {
     const q = searchQuery.toLowerCase();
-
     return (
       list.name.toLowerCase().includes(q) 
     );
@@ -143,44 +50,74 @@ useEffect(() => {
   // ADD EMPLOYEE
   const handleAdd = () => {
     setMode("add");
-    setSelectedEmployee(null);
+    setSelectedRecord(null);
     setOpenSheet(true);
   };
 
   // EDIT EMPLOYEE
   const handleEdit = (emp: any) => {
     setMode("edit");
-    setSelectedEmployee(emp);
+    setSelectedRecord(emp);
     setOpenSheet(true);
   };
 
   // DELETE EMPLOYEE
   const handleDelete = (emp: any) => {
-    setSelectedEmployee(emp);
+    setSelectedRecord(emp);
     setOpenDeleteDialog(true);
   };
+const uploadImage = async (file: File) => {
+  const fd = new FormData();
+  fd.append("course_logo", file);
+
+  const res = await fetch("/api/upload-course-image", {
+    method: "POST",
+    body: fd,
+  });
+  return res.json();
+};
 
   // HANDLE FORM SUBMIT (ADD / EDIT)
-  const handleSave = (data: any) => {
+  const handleSave = async (data: any) => {
     if (mode === "add") {
-      
-      setEmployeeData((prev) => [
-        ...prev,
-        { id: prev.length + 1, ...data }
-      ]);
+  // ✅ Upload image to frontend server
+   let imageName = "";
+
+    if (data.course_logo) {
+      const uploadRes = await uploadImage(data.course_logo);
+      if (uploadRes.status) {
+        imageName = uploadRes.filename;
+      }
+    }
+        const newRecord = {
+        name: data.name,
+        category_id: data.category_id,
+        shortdesc:  data.shortdesc,
+        overview:  data.overview,
+        price:  data.price,
+        duration:  data.duration,
+        module_count:  data.module_count,
+        course_level:  data.course_level,
+        provide_certificate:  data.provide_certificate,
+        course_language:  data.course_language,
+        instructor_support:  data.instructor_support,
+        course_advantage:  data.course_advantage,
+        couse_faq:  data.couse_faq,
+        slug: data.slug,
+        course_logo: imageName,
+      };
+  
+      dispatch(addCourse(newRecord));
+       toast.success("Course added duccessfully");
     } else {
-      setEmployeeData((prev) =>
-        prev.map((e) => (e.id === selectedEmployee.id ? { ...e, ...data } : e))
-      );
+      
     }
   };
 
   // DELETE CONFIRM
   const handleConfirmDelete = () => {
-    setEmployeeData((prev) =>
-      prev.filter((emp) => emp.id !== selectedEmployee.id)
-    );
-
+    dispatch(deleteCourse(selectedRecord.id));
+    toast.success("Course deleted duccessfully");
     setOpenDeleteDialog(false);
   };
 
@@ -214,15 +151,17 @@ useEffect(() => {
         columns={[
           { colname: "idx", value: "S No." },
           { colname: "name", value: "Name" },
-          { colname: "email", value: "Email" },
-          { colname: "phone", value: "Phone" },
-          { colname: "position", value: "Position" },
+          { colname: "category_name", value: "Category" },
+          { colname: "shortdesc", value: "Short Description" },
+          { colname: "price", value: "Price" },
+          { colname: "duration", value: "Duration" },
+          { colname: "module_count", value: "Total Module" },
           { colname: "action", value: "Action" }
         ]}
         rows={filteredRecords}
         editModal={handleEdit}
         delRecord={handleDelete}
-        pageName="employee"
+        pageName="course"
       />
 
       {/* ADD / EDIT FORM */}
@@ -230,14 +169,14 @@ useEffect(() => {
         open={openSheet}
         onClose={() => setOpenSheet(false)}
         onSubmit={handleSave}
-        defaultValues={selectedEmployee}
+        defaultValues={selectedRecord}
         categoryList= {categoryData}
       />
 
       {/* DELETE DIALOG */}
-      <DeleteEmployee
+      <DeleteCourse
         open={openDeleteDialog}
-        employee={selectedEmployee}
+        record={selectedRecord}
         onClose={() => setOpenDeleteDialog(false)}
         onConfirm={handleConfirmDelete}
       />

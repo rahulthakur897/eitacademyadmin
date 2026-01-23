@@ -6,7 +6,7 @@ import DataTable from "@/components/common/table";
 
 import Courses from "@/components/common/CoursesForm";
 import { fetchCategory } from "@/app/redux/actions/category";
-import { fetchCourses, addCourse, deleteCourse} from "@/app/redux/actions/course";
+import { fetchCourses, addCourse, deleteCourse, updateCourse} from "@/app/redux/actions/course";
 import { toast } from "sonner";
 import DeleteCourse from "@/components/common/DeleteCourse";
 
@@ -79,17 +79,17 @@ const uploadImage = async (file: File) => {
 
   // HANDLE FORM SUBMIT (ADD / EDIT)
   const handleSave = async (data: any) => {
-    if (mode === "add") {
-  // ✅ Upload image to frontend server
-   let imageName = "";
-
-    if (data.course_logo) {
+    
+  // ✅ Upload image to frontend server 
+  let imageName = data.course_logo || "";
+    if (data.course_logo instanceof File) {
       const uploadRes = await uploadImage(data.course_logo);
       if (uploadRes.status) {
         imageName = uploadRes.filename;
       }
     }
-        const newRecord = {
+    console.log("data", data);
+      const newRecord = {
         name: data.name,
         category_id: data.category_id,
         shortdesc:  data.shortdesc,
@@ -106,18 +106,19 @@ const uploadImage = async (file: File) => {
         slug: data.slug,
         course_logo: imageName,
       };
-  
+      if (mode === "add") {
       dispatch(addCourse(newRecord));
-       toast.success("Course added duccessfully");
+       toast.success("Course added successfully");
     } else {
-      
+      dispatch(updateCourse({ id: data.id, ...newRecord }));
+      toast.success("Course updated successfully");
     }
   };
 
   // DELETE CONFIRM
   const handleConfirmDelete = () => {
     dispatch(deleteCourse(selectedRecord.id));
-    toast.success("Course deleted duccessfully");
+    toast.success("Course deleted successfully");
     setOpenDeleteDialog(false);
   };
 

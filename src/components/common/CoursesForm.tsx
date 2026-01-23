@@ -24,7 +24,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import {generateSlug} from '@/utils/common';
+import { generateSlug } from '@/utils/common';
 interface CoursesProps {
     open: boolean;
     onClose: () => void;
@@ -56,31 +56,31 @@ export default function Courses({
         instructor_support: '',
         course_advantage: '',
         couse_faq: '',
-        slug:''
+        slug: ''
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
-  const [isSlugEdited, setIsSlugEdited] = useState(false);
+    const [isSlugEdited, setIsSlugEdited] = useState(false);
 
-    const handleChange = (name : string, value: any) => {
+    const handleChange = (name: string, value: any) => {
         // const { name, value } = e.target;
         setFormData((prev: any) => {
-    let updated = { ...prev, [name]: value };
+            let updated = { ...prev, [name]: value };
 
-    if (name === "name" && !isSlugEdited && value.trim()) {
-      updated.slug = generateSlug(value);
-    }
+            if (name === "name" && !isSlugEdited && value.trim()) {
+                updated.slug = generateSlug(value);
+            }
 
-    return updated;
-  });
+            return updated;
+        });
 
         setErrors({ ...errors, [name]: "" });
     };
     // Handle slug change - mark as edited manually
-const handleSlugChange = (value:any) => {
-  setFormData({ ...formData, ['slug']: value });
-  setIsSlugEdited(true);
-};
+    const handleSlugChange = (value: any) => {
+        setFormData({ ...formData, ['slug']: value });
+        setIsSlugEdited(true);
+    };
 
     const [image, setImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(
@@ -101,7 +101,7 @@ const handleSlugChange = (value:any) => {
 
     // Image preview logic
     useEffect(() => {
-        if (formData?.course_logo) {
+        if (formData?.course_logo && defaultValues?.course_logo==="") {
             const url = URL.createObjectURL(`/assets/images/course/${formData?.course_logo}`);
             setPreviewUrl(url);
             return () => URL.revokeObjectURL(url);
@@ -130,6 +130,8 @@ const handleSlugChange = (value:any) => {
                 instructor_support: defaultValues?.instructor_support,
                 course_advantage: defaultValues?.course_advantage,
                 couse_faq: defaultValues?.couse_faq,
+                id: defaultValues?.id,  
+                slug: defaultValues?.slug
             }
             setFormData(tempObj)
         } else {
@@ -148,14 +150,14 @@ const handleSlugChange = (value:any) => {
                 instructor_support: '',
                 course_advantage: '',
                 couse_faq: '',
-                slug:""
+                slug: ""
             })
         }
     }, [defaultValues, open]);
 
     // Submit
     const handleSave = () => {
-       
+
 
         onSubmit?.(formData);
         onClose();
@@ -182,7 +184,7 @@ const handleSlugChange = (value:any) => {
                             name="name"
                             type="text"
                             value={formData?.name}
-                            onChange={(e)=>handleChange("name", e.target.value)}
+                            onChange={(e) => handleChange("name", e.target.value)}
                             placeholder="Enter course name"
                         />
                     </div>
@@ -192,7 +194,7 @@ const handleSlugChange = (value:any) => {
                             name="slug"
                             type="text"
                             value={formData?.slug}
-                            
+
                             onChange={handleSlugChange}
                             placeholder="Enter slug"
                         />
@@ -203,8 +205,8 @@ const handleSlugChange = (value:any) => {
                             <select
                                 name="category_id"
                                 value={formData.category_id}
-                                 onChange={(e)=>handleChange("category_id", e.target.value)}
-                                
+                                onChange={(e) => handleChange("category_id", e.target.value)}
+
                                 className="p-3 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#E8774D] bg-white"
                             >
                                 {categoryList?.map((list: any) =>
@@ -221,10 +223,10 @@ const handleSlugChange = (value:any) => {
                             <Input
                                 name="price"
                                 type="number"
-                                 onChange={(e)=>handleChange("price", e.target.value)}
+                                onChange={(e) => handleChange("price", e.target.value)}
                                 value={formData.price}
-                                  min="0"
-                              
+                                min="0"
+
                                 placeholder="example@mysrl.com"
                             />
                         </div>
@@ -236,8 +238,8 @@ const handleSlugChange = (value:any) => {
                                 name="duration"
                                 type="text"
                                 value={formData.duration}
-                              
-                                 onChange={(e)=>handleChange("duration", e.target.value)}
+
+                                onChange={(e) => handleChange("duration", e.target.value)}
                                 placeholder="2.5 hours etc"
                             />
 
@@ -246,11 +248,11 @@ const handleSlugChange = (value:any) => {
                             <Label className="text-sm font-semibold text-gray-800">Total Module</Label>
                             <Input
                                 name="module_count"
-                                 type="number"
-                                   min="1"
+                                type="number"
+                                min="1"
                                 value={formData.module_count}
-                             
-                                 onChange={(e)=>handleChange("module_count", e.target.value)}
+
+                                onChange={(e) => handleChange("module_count", e.target.value)}
                                 placeholder="2 or 5 etc"
                             />
                         </div>
@@ -259,10 +261,10 @@ const handleSlugChange = (value:any) => {
                         <div className="space-y-1 w-full">
                             <Label className=" text-sm font-semibold text-gray-800">Course Level</Label>
                             <Input
-                             name="course_level"
+                                name="course_level"
                                 type="text"
                                 value={formData.course_level}
-                                onChange={(e)=>handleChange("course_level", e.target.value)}
+                                onChange={(e) => handleChange("course_level", e.target.value)}
                                 placeholder="beginner, intermediate"
                             />
 
@@ -273,7 +275,7 @@ const handleSlugChange = (value:any) => {
                             <select
                                 name="provide_certificate"
                                 value={formData.provide_certificate}
-                               onChange={(e)=>handleChange("provide_certificate", e.target.value)}
+                                onChange={(e) => handleChange("provide_certificate", e.target.value)}
                                 className="p-3 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#E8774D] bg-white"
                             >
                                 <option value={"0"}> Select</option>
@@ -289,7 +291,7 @@ const handleSlugChange = (value:any) => {
                                 name="course_language"
                                 type="text"
                                 value={formData.course_language}
-                                 onChange={(e)=>handleChange("course_language", e.target.value)}
+                                onChange={(e) => handleChange("course_language", e.target.value)}
                                 placeholder="English, Hindi .."
                             />
 
@@ -300,7 +302,7 @@ const handleSlugChange = (value:any) => {
                             <select
                                 name="instructor_support"
                                 value={formData.instructor_support}
-                               onChange={(e)=>handleChange("instructor_support", e.target.value)}
+                                onChange={(e) => handleChange("instructor_support", e.target.value)}
                                 className="p-3 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#E8774D] bg-white"
                             >
                                 <option value={""} key={0}> Select</option>
@@ -311,7 +313,7 @@ const handleSlugChange = (value:any) => {
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Short description</Label>
-                        <ReactQuill theme="snow" value={formData?.shortdesc}  onChange={(value) =>handleChange("shortdesc", value)} />
+                        <ReactQuill theme="snow" value={formData?.shortdesc} onChange={(value) => handleChange("shortdesc", value)} />
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Overview</Label>
@@ -319,7 +321,7 @@ const handleSlugChange = (value:any) => {
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Course Advantage</Label>
-                        <ReactQuill theme="snow" value={formData?.course_advantage} onChange={ (value) =>handleChange("course_advantage", value)} />
+                        <ReactQuill theme="snow" value={formData?.course_advantage} onChange={(value) => handleChange("course_advantage", value)} />
                     </div>
                     <div className="space-y-1">
                         <Label className="text-sm font-semibold text-gray-800">Couse Faq</Label>

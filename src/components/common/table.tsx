@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import moment from "moment";
 
 interface Column {
   colname: string;
@@ -152,10 +153,17 @@ export default function DataTable({
                     return (
                       <TableCell key={col.colname} className="text-gray-800">
                         {col.colname ==="shortdesc" && (
-                          <div className="w-32 whitespace-normal">{value}</div>
+                          <div className="w-auto break-words whitespace-normal break-all"
+                          dangerouslySetInnerHTML={{ __html: value }} />
                         )
                         }
-                        {col.colname !== "action" && col.colname !=="shortdesc" && (value ?? "-")}
+                        {col.colname !== "action" && col.colname !=="shortdesc" &&
+                        col.colname !== "batch_start"  && col.colname !== "demo_date" && (value ?? "-")}
+                        {(col.colname === "batch_start"  || col.colname === "demo_date") && (
+                          <span className="text-sm">
+                            {moment(value).format("DD MMM, YYYY")}
+                          </span>
+                        )}
 
                         {col.colname === "action" && (
                           <div>

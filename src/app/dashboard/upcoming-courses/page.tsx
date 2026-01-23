@@ -1,133 +1,87 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DataTable from "@/components/common/table";
 import UpcomingCourseForm from "@/components/common/UpcomingCourseForm";
 import UpcomingCourseDelete from "@/components/common/UpcomingCourseDeleteDialog";
-
-export const upcomingCourses = [
-    {
-        id: 1,
-        title: "Introduction to Artificial Intelligence",
-        categoryId: 1,
-        categoryName: "Electronics",
-        startDate: "2025-03-10",
-        demoDate: "2025-03-05",
-        duration: "6 Weeks",
-        instructor: "Dr. Anita Sharma",
-        level: "Beginner",
-        image: "/assets/images/courses/ai-intro.jpg",
-    },
-    {
-        id: 2,
-        title: "Advanced Machine Learning",
-        categoryId: 1,
-        categoryName: "Electronics",
-        startDate: "2025-04-05",
-        demoDate: "2025-03-28",
-        duration: "8 Weeks",
-        instructor: "Prof. Rahul Verma",
-        level: "Advanced",
-        image: "/assets/images/courses/advanced-ml.jpg",
-    },
-    {
-        id: 3,
-        title: "Cloud Computing Essentials",
-        categoryId: 2,
-        categoryName: "Furniture",
-        startDate: "2025-03-20",
-        demoDate: "2025-03-15",
-        duration: "5 Weeks",
-        instructor: "Aditi Gupta",
-        level: "Intermediate",
-        image: "/assets/images/courses/cloud-basics.jpg",
-    },
-    {
-        id: 4,
-        title: "Cybersecurity Fundamentals",
-        categoryId: 2,
-        categoryName: "Furniture",
-        startDate: "2025-04-15",
-        demoDate: "2025-04-10",
-        duration: "6 Weeks",
-        instructor: "Vikram Singh",
-        level: "Beginner",
-        image: "/assets/images/courses/cybersecurity.jpg",
-    },
-    {
-        id: 5,
-        title: "Data Visualization with Python",
-        categoryId: 1,
-        categoryName: "Electronics",
-        startDate: "2025-03-28",
-        demoDate: "2025-03-22",
-        duration: "4 Weeks",
-        instructor: "Neha Kapoor",
-        level: "Intermediate",
-        image: "/assets/images/courses/data-visualization.jpg",
-    },
-];
-
-
-
+import { fetchUpcomingCourse, addUpcomingCourse,updateUpcomingCourse, deleteUpcomingCourse} from "@/app/redux/actions/course";
+import { fetchCategory } from "@/app/redux/actions/category";
+import { getInstructorList } from "@/app/redux/actions/user";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import { add } from "date-fns";
 
 export default function UpcomingCourse() {
-    // FIXED: use upcomingCourses instead of "category"
-    const [stockData, setStockData] = useState(upcomingCourses);
-
+    const dispatch = useDispatch();
     const [openSheet, setOpenSheet] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
     const [mode, setMode] = useState<"add" | "edit">("add");
-    const [selectedStock, setSelectedStock] = useState<any>(null);
+    const [selectedRecord, setSelectedRecord] = useState<any>(null);
 
     const [searchQuery, setSearchQuery] = useState("");
+    const { upcomingCourseList } = useSelector((state: any) => state.course);
+    const { categoryData } = useSelector((state: any) => state.category);
+    const { instructorList } = useSelector((state: any) => state.user);
 
+      useEffect(() => {
+       dispatch(fetchUpcomingCourse());
+       dispatch(fetchCategory());
+       dispatch(getInstructorList());
+    }, [dispatch]);
+    
+     const getCombinedList = () => {
+        return upcomingCourseList.map((rowData: any) => {
+          const categoryName = categoryData.find((blist: any) => blist.id === parseInt(rowData.category_id));
+          return {
+            ...rowData,
+            category_name: categoryName ? categoryName?.name : "Unknown Category"
+          };
+        });
+      };
+    
+      const combinedList = getCombinedList();
     // SEARCH FILTER
-    const filteredStock = stockData.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredStock = combinedList.filter((item) =>
+        item?.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     // ADD
     const handleAdd = () => {
         setMode("add");
-        setSelectedStock(null);
+        setSelectedRecord(null);
         setOpenSheet(true);
     };
 
     // EDIT
     const handleEdit = (item: any) => {
         setMode("edit");
-        setSelectedStock(item);
+        setSelectedRecord(item);
         setOpenSheet(true);
     };
 
     // DELETE
     const handleDelete = (item: any) => {
-        setSelectedStock(item);
+        setSelectedRecord(item);
         setOpenDeleteDialog(true);
     };
 
     // SAVE DATA (Add / Edit)
     const handleSave = (data: any) => {
         if (mode === "add") {
-            setStockData((prev) => [
-                ...prev,
-                {
-                    id: prev.length + 1,
-                    ...data,
-                },
-            ]);
-        } else {
-            setStockData((prev) =>
-                prev.map((e) => (e.id === selectedStock.id ? { ...e, ...data } : e))
-            );
+            dispatch(addUpcomingCourse(data))
+            toast.success("Upcoming Course added successfully!");
+        } else {     
+            dispatch(updateUpcomingCourse(data))   
+            toast.success("Upcoming Course updated successfully!");
         }
     };
 
     // CONFIRM DELETE
     const handleConfirmDelete = () => {
-        setStockData((prev) => prev.filter((item) => item.id !== selectedStock.id));
+        // Dispatch delete action here
+        dispatch(deleteUpcomingCourse(selectedRecord.id));
+        toast.success("Upcoming Course deleted successfully!");
         setOpenDeleteDialog(false);
     };
 
@@ -165,12 +119,12 @@ export default function UpcomingCourse() {
             <DataTable
                 columns={[
                     { colname: "idx", value: "S No." },
-                    { colname: "title", value: "Title" },
-                    { colname: "categoryName", value: "Category" },
-                    { colname: "demoDate", value: "Demo Date" },
-                    { colname: "startDate", value: "Start Date" },
-                    { colname: "duration", value: "Duration" },
-                    { colname: "instructor", value: "Instructor" },
+                    { colname: "name", value: "Title" },
+                    { colname: "category_name", value: "Category" },
+                    { colname: "demo_date", value: "Demo Date" },
+                    { colname: "batch_start", value: "Start Date" },
+                    { colname: "demo_duration", value: "Duration" },
+                    { colname: "faculty_id", value: "Instructor" },
                     { colname: "level", value: "Level" },
                     { colname: "action", value: "Action" },
                 ]}
@@ -183,27 +137,17 @@ export default function UpcomingCourse() {
             <UpcomingCourseForm
                 open={openSheet}
                 mode={mode}
-                record={selectedStock}
+                record={selectedRecord}
                 onClose={() => setOpenSheet(false)}
                 onSave={handleSave}
-                courseList={upcomingCourses}   // Titles dropdown
-                categories={[
-                    { id: 1, name: "Electronics" },
-                    { id: 2, name: "Furniture" },
-                ]}
-                instructors={[
-                    "Dr. Anita Sharma",
-                    "Prof. Rahul Verma",
-                    "Aditi Gupta",
-                    "Vikram Singh",
-                    "Neha Kapoor"
-                ]}
+                categories={categoryData}
+                instructors={instructorList}
             />
 
             {/* DELETE DIALOG */}
             <UpcomingCourseDelete
                 open={openDeleteDialog}
-                record={selectedStock}
+                record={selectedRecord}
                 onClose={() => setOpenDeleteDialog(false)}
                 onConfirm={handleConfirmDelete}
             />

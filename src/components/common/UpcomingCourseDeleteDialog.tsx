@@ -40,7 +40,7 @@ export default function UpcomingCourseDelete({
 
         <DialogDescription className="text-gray-600 text-center">
           Are you sure you want to delete{" "}
-          <span className="font-semibold text-blue-700">{record?.title}</span>?
+          <span className="font-semibold text-blue-700">{record?.name}</span>?
           <br />
           This action cannot be undone.
         </DialogDescription>

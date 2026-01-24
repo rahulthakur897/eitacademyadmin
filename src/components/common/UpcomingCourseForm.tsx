@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Pencil, PlusCircle } from "lucide-react";
+import { set } from "date-fns";
 
 interface CourseOption {
   id: number;
@@ -30,9 +31,9 @@ interface Props {
   onClose: () => void;
   onSave: (data: any) => void;
 
-  courseList: CourseOption[];
-  categories: { id: number; name: string }[];
-  instructors: string[];
+  // courseList: CourseOption[];
+  categories: [];
+  instructors: [];
 }
 
 export default function UpcomingCourseForm({
@@ -41,11 +42,11 @@ export default function UpcomingCourseForm({
   record,
   onClose,
   onSave,
-  courseList,
   categories,
   instructors,
 }: Props) {
   const [title, setTitle] = useState("");
+  const [rowId, setRowId ] = useState(0);
   const [categoryId, setCategoryId] = useState<number | "">("");
   const [instructor, setInstructor] = useState("");
   const [level, setLevel] = useState("");
@@ -53,17 +54,20 @@ export default function UpcomingCourseForm({
   const [startDate, setStartDate] = useState("");
   const [demoDate, setDemoDate] = useState("");
   const [duration, setDuration] = useState("");
+  const [classesOn, setClassesOn] = useState("");
 
   // Reset or Load Data when editing
   useEffect(() => {
     if (mode === "edit" && record) {
-      setTitle(record.title);
-      setCategoryId(record.categoryId);
-      setInstructor(record.instructor);
+      setTitle(record.name);
+      setCategoryId(record.category_id);
+      setInstructor(record.faculty_id);
       setLevel(record.level);
-      setStartDate(record.startDate);
-      setDemoDate(record.demoDate);
-      setDuration(record.duration);
+      setStartDate(record.batch_start);
+      setDemoDate(record.demo_date);
+      setDuration(record.demo_duration);
+      setRowId(record.id);
+      setClassesOn(record.classes);
     } else {
       setTitle("");
       setCategoryId("");
@@ -72,6 +76,7 @@ export default function UpcomingCourseForm({
       setStartDate("");
       setDemoDate("");
       setDuration("");
+      setRowId(0);
     }
   }, [mode, record]);
 
@@ -79,14 +84,14 @@ export default function UpcomingCourseForm({
     if (!title || !categoryId || !instructor) return;
 
     onSave({
-      title,
-      categoryId,
-      categoryName: categories.find((c) => c.id === categoryId)?.name || "",
-      instructor,
+      name: title,
+      category_id:categoryId,
+      faculty_id:  instructor,
       level,
-      startDate,
-      demoDate,
-      duration,
+      batch_start:startDate,
+      demo_date:demoDate,
+      demo_duration:duration,
+      id: rowId,
     });
 
     onClose();
@@ -94,7 +99,7 @@ export default function UpcomingCourseForm({
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="right" className="w-[40%] p-6">
+      <SheetContent side="right" className="w-[40%] p-6 overflow-auto">
 
         {/* HEADER */}
         <SheetHeader className="p-0">
@@ -114,18 +119,12 @@ export default function UpcomingCourseForm({
           {/* COURSE TITLE */}
           <div>
             <Label className="font-bold text-gray-700">Course Title</Label>
-            <select
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 w-full border border-blue-500 rounded-md px-3 py-2 focus:ring-blue-600"
-            >
-              <option value="">Select Course</option>
-              {courseList.map((c) => (
-                <option key={c.id} value={c.title}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
+            <Input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="border-blue-500"
+              />
           </div>
 
           {/* INSTRUCTOR */}
@@ -137,9 +136,9 @@ export default function UpcomingCourseForm({
               className="mt-1 w-full border border-blue-500 rounded-md px-3 py-2 focus:ring-blue-600"
             >
               <option value="">Select Instructor</option>
-              {instructors.map((ins, i) => (
-                <option key={i} value={ins}>
-                  {ins}
+              {instructors?.map((ins, i) => (
+                <option key={i} value={ins?.id}>
+                  {ins?.name}
                 </option>
               ))}
             </select>
@@ -154,9 +153,9 @@ export default function UpcomingCourseForm({
               className="mt-1 w-full border border-blue-500 rounded-md px-3 py-2 focus:ring-blue-600"
             >
               <option value="">Select Category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
+              {categories?.map((cat) => (
+                <option key={cat?.id} value={cat?.id}>
+                  {cat?.name}
                 </option>
               ))}
             </select>
@@ -170,9 +169,9 @@ export default function UpcomingCourseForm({
               className="mt-1 w-full border border-blue-500 rounded-md px-3 py-2 focus:ring-blue-600"
             >
               <option value="">Select Level</option>
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
+              <option value={"Beginner"}>Beginner</option>
+              <option value={"Intermediate"}>Intermediate</option>
+              <option value={"Advanced"}>Advanced</option>
             </select>
           </div>
           </div>
@@ -209,6 +208,16 @@ export default function UpcomingCourseForm({
               placeholder="e.g. 6 Weeks"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
+              className="border-blue-500"
+            />
+          </div>
+          {/* Classes */}
+          <div>
+            <Label className="font-bold text-gray-700">Classes on</Label>
+            <Input
+              placeholder="e.g.Monday, Wednesday, Friday"
+              value={classesOn}
+              onChange={(e) => setClassesOn(e.target.value)}
               className="border-blue-500"
             />
           </div>

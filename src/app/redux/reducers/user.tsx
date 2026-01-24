@@ -1,4 +1,4 @@
-import { ADMIN_LOGIN_SUCCESS } from "../constant";
+import { ADMIN_LOGIN_SUCCESS, GET_INSTRUCTOR_LIST_SUCCESS } from "../constant";
 import { API_CALLING } from "../constant/common";
 
 const initialState = {
@@ -6,6 +6,7 @@ const initialState = {
   adminData: {},
   errorData: {},
   isAuth: false,
+  instructorList: [],
 };
 
 
@@ -25,7 +26,13 @@ export const userReducer = (state = initialState, action : any) => {
         isAuth: true,
       };
     }
-
+    case GET_INSTRUCTOR_LIST_SUCCESS: {
+      
+      return {
+        ...state,
+        instructorList: action.response,
+      };
+    }
     default:
       return state;
   }

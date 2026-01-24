@@ -1,4 +1,4 @@
-import { ADMIN_LOGIN_ACTION } from "../constant/user";
+import { ADMIN_LOGIN_ACTION, GET_INSTRUCTOR_LIST } from "../constant/user";
 
 export function adminLogin(data: any) { 
 
@@ -6,4 +6,11 @@ export function adminLogin(data: any) {
     type: ADMIN_LOGIN_ACTION,
     payload: data,
   };
+}
+
+export function getInstructorList(){
+  
+  return{
+    type: GET_INSTRUCTOR_LIST,
+  }
 }

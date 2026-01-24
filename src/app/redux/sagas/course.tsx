@@ -5,7 +5,17 @@ import {
   DELETE_COURSE,
   DELETE_COURSE_SUCCESS,
   FETCH_COURSES,
-  FETCH_COURSES_SUCCESS
+  FETCH_COURSES_SUCCESS,
+  UPDATE_COURSE_SUCCESS,
+  UPDATE_COURSE,
+  FETCH_UPCOMING_COURSE_SUCCESS,
+  FETCH_UPCOMING_COURSE,
+  ADD_UPCOMING_COURSE_SUCCESS,
+  ADD_UPCOMING_COURSE,
+  UPDATE_UPCOMING_COURSE,
+  UPDATE_UPCOMING_COURSE_SUCCESS,
+  DELETE_UPCOMING_COURSE_SUCCESS,
+  DELETE_UPCOMING_COURSE,
 } from "../constant";
 import { API_CALLING, API_FAILURE } from "../constant/common";
 import { takeLatest } from "redux-saga/effects";
@@ -32,8 +42,7 @@ function* addCourse(data) {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/course/add`, data.payload);
     const apiResponse = response.data;
-    const returObj ={...data.payload, id:apiResponse?.data}
-    yield put({ type: ADD_COURSE_SUCCESS, response:  returObj });
+    yield put({ type: ADD_COURSE_SUCCESS, response: data.payload });
   } catch (error) {
     const errorObj = {
       status: 401,
@@ -43,20 +52,20 @@ function* addCourse(data) {
   }
 }
 
-// function* updateCategory(data) {
-//   try {
-//     yield put({ type: API_CALLING });
-//     const response = yield Api.post(BASEURL, `/category/update`, data.payload);
-//     const apiResponse = response.data;
-//     yield put({ type: UPDATE_CATEGORY_SUCCESS, response: data.payload });
-//   } catch (error) {
-//     const errorObj = {
-//       status: 401,
-//       statusText: "Invalid Request",
-//     };
-//     yield put({ type: UPDATE_CATEGORY_FAILURE, error: errorObj });
-//   }
-// }
+function* updateCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.post(BASEURL, `/course/update`, data.payload);
+    const apiResponse = response.data;
+    yield put({ type: UPDATE_COURSE_SUCCESS, response: data.payload });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
 
 function* deleteCourse(data) {
   try {
@@ -72,8 +81,75 @@ function* deleteCourse(data) {
     yield put({ type: API_FAILURE, error: errorObj });
   }
 }
+
+function* fetchUpcomingCourse() {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.get(BASEURL, `/course/upcoming`);
+    const apiResponse = response.data;
+    yield put({ type: FETCH_UPCOMING_COURSE_SUCCESS, response: apiResponse?.data });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
+
+function* addUpcomingCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.post(BASEURL, `/course/upcoming/add`, data.payload);
+    const apiResponse = response.data;
+    const returObj ={...data.payload, id:apiResponse?.data}
+    yield put({ type: ADD_UPCOMING_COURSE_SUCCESS, response:  returObj });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
+
+function* updateUpcomingCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.post(BASEURL, `/course/upcoming/update`, data.payload);
+    const apiResponse = response.data;
+    const returObj ={...data.payload, id:apiResponse?.data}
+    yield put({ type: UPDATE_UPCOMING_COURSE_SUCCESS, response:  returObj });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
+function* deleteUpcomingCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.delete(BASEURL, `/course/upcoming/delete/${data.payload}`);
+    
+    yield put({ type: DELETE_UPCOMING_COURSE_SUCCESS, response: data.payload });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
+
 export function* getCoursesSaga() {
   yield takeLatest(FETCH_COURSES, fetchCourses);
   yield takeLatest(ADD_COURSE, addCourse);
   yield takeLatest(DELETE_COURSE, deleteCourse);
+  yield takeLatest(UPDATE_COURSE, updateCourse);
+  yield takeLatest(FETCH_UPCOMING_COURSE, fetchUpcomingCourse);
+  yield takeLatest(ADD_UPCOMING_COURSE, addUpcomingCourse);
+  yield takeLatest(UPDATE_UPCOMING_COURSE, updateUpcomingCourse);
+  yield takeLatest(DELETE_UPCOMING_COURSE, deleteUpcomingCourse);
 }

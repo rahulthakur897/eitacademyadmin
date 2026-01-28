@@ -94,11 +94,11 @@ export default function DataTable({
         </DropdownMenu>
       );
     }
-     if (pageName === "popular-course") {
+    if (pageName === "popular-course") {
       return (
         <Trash2 onClick={() => delRecord?.(row)} className="h-4 w-4" />
       );
-      
+
     }
   };
 
@@ -152,14 +152,28 @@ export default function DataTable({
 
                     return (
                       <TableCell key={col.colname} className="text-gray-800">
-                        {col.colname ==="shortdesc" && (
-                          <div className="w-auto break-words whitespace-normal break-all"
-                          dangerouslySetInnerHTML={{ __html: value }} />
+                        {col.colname === "name" && (
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={
+                                item.course_logo
+                                  ? `/assets/images/course/${item.course_logo}`
+                                  : "/assets/images/icons/upload.png"
+                              }
+                              alt={value}
+                              className="w-10 h-10 object-cover"
+                            />
+                            <span className="font-medium text-gray-900">{value}</span>
+                          </div>
+                        )}
+                        {col.colname === "shortdesc" && (
+                          <div className="w-[350px] break-words whitespace-normal break-all"
+                            dangerouslySetInnerHTML={{ __html: value }} />
                         )
                         }
-                        {col.colname !== "action" && col.colname !=="shortdesc" &&
-                        col.colname !== "batch_start"  && col.colname !== "demo_date" && (value ?? "-")}
-                        {(col.colname === "batch_start"  || col.colname === "demo_date") && (
+                        {col.colname !== "action" && col.colname !== "name" && col.colname !== "shortdesc" &&
+                          col.colname !== "batch_start" && col.colname !== "demo_date" && (value ?? "-")}
+                        {(col.colname === "batch_start" || col.colname === "demo_date") && (
                           <span className="text-sm">
                             {moment(value).format("DD MMM, YYYY")}
                           </span>
@@ -210,11 +224,10 @@ export default function DataTable({
                 size="sm"
                 variant={currentPage === i + 1 ? "default" : "outline"}
                 onClick={() => handlePageChange(i + 1)}
-                className={`${
-                  currentPage === i + 1
-                    ? "bg-[#003B7D] text-white"
-                    : "border-[#003B7D] text-[#003B7D] hover:bg-blue-50"
-                }`}
+                className={`${currentPage === i + 1
+                  ? "bg-[#003B7D] text-white"
+                  : "border-[#003B7D] text-[#003B7D] hover:bg-blue-50"
+                  }`}
               >
                 {i + 1}
               </Button>

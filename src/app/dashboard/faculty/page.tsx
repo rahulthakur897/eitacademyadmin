@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import DataTable from "@/components/common/table";
-import UpcomingCourseForm from "@/components/common/UpcomingCourseForm";
+import UpcomingCourseForm from "@/app/dashboard/upcoming-courses/UpcomingCourseForm";
 import UpcomingCourseDelete from "@/components/common/UpcomingCourseDeleteDialog";
 
 /* ==========================================================

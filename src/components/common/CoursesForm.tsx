@@ -33,7 +33,7 @@ interface CoursesProps {
     categoryList?: any;
 }
 
-export default function Courses({
+export default function CoursesForm({
     open,
     onClose,
     onSubmit,

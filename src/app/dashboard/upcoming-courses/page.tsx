@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import DataTable from "@/components/common/table";
-import UpcomingCourseForm from "@/components/common/UpcomingCourseForm";
 import UpcomingCourseDelete from "@/components/common/UpcomingCourseDeleteDialog";
 import { fetchUpcomingCourse, addUpcomingCourse,updateUpcomingCourse, deleteUpcomingCourse} from "@/app/redux/actions/course";
 import { fetchCategory } from "@/app/redux/actions/category";
 import { getInstructorList } from "@/app/redux/actions/user";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
-import { add } from "date-fns";
+import UpcomingCourseForm from "./UpcomingCourseForm";
 
 export default function UpcomingCourse() {
     const dispatch = useDispatch();
@@ -140,7 +139,6 @@ export default function UpcomingCourse() {
                 record={selectedRecord}
                 onClose={() => setOpenSheet(false)}
                 onSave={handleSave}
-                categories={categoryData}
                 instructors={instructorList}
             />
 

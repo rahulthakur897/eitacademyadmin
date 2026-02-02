@@ -53,7 +53,7 @@ export default function UpcomingCourseForm({
   }, [dispatch]);
 
   const initialValues: UpcomingCourse = {
-    name: record?.name ?? "",
+    course_id: record?.course_id ?? "",
     category_id: record?.category_id ?? "",
     faculty_id: record?.faculty_id ?? "",
     level: record?.level ?? "",
@@ -131,9 +131,9 @@ export default function UpcomingCourseForm({
                 <div className="space-y-1">
                   <Label className=" text-sm font-semibold text-gray-800">Course Name</Label>
                   <Select
-                    value={formik.values.name}
+                    value={formik.values.course_id}
                     onValueChange={(value) =>
-                      formik.setFieldValue("name", value)
+                      formik.setFieldValue("course_id", value)
                     }
                     disabled={!formik.values.category_id}
                   >
@@ -150,7 +150,7 @@ export default function UpcomingCourseForm({
                       {filteredCourses.map((course: any) => (
                         <SelectItem
                           key={course.id}
-                          value={course.name}
+                        value={String(course.id)}
                         >
                           {course.name}
                         </SelectItem>
@@ -158,10 +158,10 @@ export default function UpcomingCourseForm({
                     </SelectContent>
                   </Select>
 
-                  {formik.touched.name &&
-                    typeof formik.errors.name === "string" && (
+                  {formik.touched.course_id &&
+                    typeof formik.errors.course_id === "string" && (
                       <p className="text-sm text-red-500">
-                        {formik.errors.name}
+                        {formik.errors.course_id}
                       </p>
                     )}
                 </div>

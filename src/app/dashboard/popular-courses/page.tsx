@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import DataTable from "@/components/common/table";
-import PopularCoursesForm from "@/components/common/PopularCoursesForm";
 import PopularCourseDelete from "@/components/common/PopularCoursesDeleteDialog";
+import PopularCoursesForm from "./PopularCoursesForm";
 
 const category = [
   { id: 1, name: "Electronics" },

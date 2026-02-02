@@ -59,7 +59,7 @@ export default function CoursesForm({
       ? String(defaultValues.category_id) : "",
     shortdesc: defaultValues?.shortdesc ?? "",
     overview: defaultValues?.overview ?? "",
-    course_logo: defaultValues?.course_logo ?? "",
+    course_logo: defaultValues?.course_logo ?? "/assets/images/icons/empty.png",
     price: defaultValues?.price ?? 0,
     duration: defaultValues?.duration ?? "",
     module_count: defaultValues?.module_count ?? 0,
@@ -74,6 +74,8 @@ export default function CoursesForm({
   useEffect(() => {
     if (defaultValues?.course_logo) {
       setPreviewUrl(`/assets/images/course/${defaultValues.course_logo}`);
+    }else{
+      setPreviewUrl("/assets/images/icons/empty.png")
     }
   }, [defaultValues]);
 
@@ -93,16 +95,15 @@ export default function CoursesForm({
           validate={validateCourseForm}
           enableReinitialize
           onSubmit={(values) => {
-            console.log("SUBMIT VALUES:", values);
             onSubmit?.(values);
             onClose();
           }}
         >
           {(formik) => {
             const hasImage =
-              !!formik.values.course_logo ||
+              !!formik.values.course_logo &&
               previewUrl !== "/assets/images/icons/empty.png";
-
+            console.log("hasimage", hasImage)
             return (
               <Form className="space-y-6 mt-6">
                 {/* IMAGE */}

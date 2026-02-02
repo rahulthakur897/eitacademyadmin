@@ -77,8 +77,8 @@ export const validateCourseForm = (values: CourseFormData) => {
 export const upcomingCourseForm = (values: UpcomingCourse) => {
   const errors: any = {};
 
-  if (!values.name?.trim()) {
-    errors.name = "Course title is required";
+  if (!values.course_id) {
+    errors.course_id = "Course title is required";
   }
 
   if (!values.category_id) {

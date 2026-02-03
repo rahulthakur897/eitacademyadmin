@@ -21,3 +21,12 @@ export const UPDATE_UPCOMING_COURSE_SUCCESS = "update_upcoming_course_success";
 
 export const DELETE_UPCOMING_COURSE = "delete_upcoming_courses";
 export const DELETE_UPCOMING_COURSE_SUCCESS = "delete_upcoming_courses_success";
+
+export const FETCH_POPULAR_COURSE = "fetch_popular_course";
+export const FETCH_POPULAR_COURSE_SUCCESS = "fetch_popular_course_success";
+
+export const ADD_POPULAR_COURSE = "add_popular_course";
+export const ADD_POPULAR_COURSE_SUCCESS = "add_popular_course_success";   
+
+export const DELETE_POPULAR_COURSE = "delete_popular_courses";
+export const DELETE_POPULAR_COURSE_SUCCESS = "delete_popular_courses_success";

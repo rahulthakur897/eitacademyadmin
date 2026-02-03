@@ -16,6 +16,12 @@ import {
   UPDATE_UPCOMING_COURSE_SUCCESS,
   DELETE_UPCOMING_COURSE_SUCCESS,
   DELETE_UPCOMING_COURSE,
+  FETCH_POPULAR_COURSE_SUCCESS,
+  FETCH_POPULAR_COURSE,
+  ADD_POPULAR_COURSE,
+  DELETE_POPULAR_COURSE,
+  DELETE_POPULAR_COURSE_SUCCESS,
+  ADD_POPULAR_COURSE_SUCCESS,
 } from "../constant";
 import { API_CALLING, API_FAILURE } from "../constant/common";
 import { takeLatest } from "redux-saga/effects";
@@ -142,6 +148,52 @@ function* deleteUpcomingCourse(data) {
     yield put({ type: API_FAILURE, error: errorObj });
   }
 }
+// getPopularCourse
+function* getPopularCourse() {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.get(BASEURL, `/course/popular`);
+    const apiResponse = response.data;
+    yield put({ type: FETCH_POPULAR_COURSE_SUCCESS, response: apiResponse?.data });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
+
+function* addPopularCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.post(BASEURL, `/course/popular/add`, data.payload);
+    const apiResponse = response.data;
+    const returObj ={...data.payload, id:apiResponse?.data}
+    yield put({ type: ADD_POPULAR_COURSE_SUCCESS, response:  returObj });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
+
+function* deletePopularCourse(data) {
+  try {
+    yield put({ type: API_CALLING });
+    const response = yield Api.delete(BASEURL, `/course/popular/delete/${data.payload}`);
+    
+    yield put({ type: DELETE_POPULAR_COURSE_SUCCESS, response: data.payload });
+  } catch (error) {
+    const errorObj = {
+      status: 401,
+      statusText: "Invalid Request",
+    };
+    yield put({ type: API_FAILURE, error: errorObj });
+  }
+}
 
 export function* getCoursesSaga() {
   yield takeLatest(FETCH_COURSES, fetchCourses);
@@ -152,4 +204,7 @@ export function* getCoursesSaga() {
   yield takeLatest(ADD_UPCOMING_COURSE, addUpcomingCourse);
   yield takeLatest(UPDATE_UPCOMING_COURSE, updateUpcomingCourse);
   yield takeLatest(DELETE_UPCOMING_COURSE, deleteUpcomingCourse);
+  yield takeLatest(FETCH_POPULAR_COURSE, getPopularCourse);
+  yield takeLatest(ADD_POPULAR_COURSE, addPopularCourse);
+  yield takeLatest(DELETE_POPULAR_COURSE, deletePopularCourse);
 }

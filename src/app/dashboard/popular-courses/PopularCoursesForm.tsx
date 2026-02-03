@@ -24,49 +24,44 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Tags } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategory } from "@/app/redux/actions/category";
-import { fetchCourses } from "@/app/redux/actions/course";
+
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onSave: (data: any) => void;
+  categories: [];
+  courseList : [];
 }
 
 const validationSchema = Yup.object({
-  categoryId: Yup.string().required("Category is required"),
-  courseId: Yup.string().required("Course is required"),
+  category_id: Yup.string().required("Category is required"),
+  course_id: Yup.string().required("Course is required"),
 });
 
 export default function PopularCoursesForm({
   open,
   onClose,
   onSave,
+  categories,
+  courseList 
 }: Props) {
   const dispatch = useDispatch();
 
-  const { categoryData } = useSelector((state: any) => state.category);
-  const { courseList } = useSelector((state: any) => state.course);
-
-  useEffect(() => {
-    dispatch(fetchCategory());
-    dispatch(fetchCourses());
-  }, [dispatch]);
-
   const formik = useFormik({
     initialValues: {
-      categoryId: "",
-      courseId: "",
-      isBestSeller: false,
-      isTrending: false,
+      category_id: "",
+      course_id: "",
+      best_seller: false,
+      trending: false,
     },
     validationSchema,
     onSubmit: (values) => {
       onSave({
-        categoryId: Number(values.categoryId),
-        courseId: Number(values.courseId),
-        isBestSeller: values.isBestSeller,
-        isTrending: values.isTrending,
+        category_id: Number(values.category_id),
+        course_id: Number(values.course_id),
+        best_seller: values.best_seller? 1 : 0,
+        trending: values.trending? 1:0,
       });
       onClose();
     },
@@ -78,11 +73,11 @@ export default function PopularCoursesForm({
 
   // 🔥 Filter courses on category change
   const filteredCourses = useMemo(() => {
-    if (!formik.values.categoryId) return [];
+    if (!formik.values.category_id) return [];
     return courseList.filter(
-      (c: any) => c.categoryId === Number(formik.values.categoryId)
+      (c: any) => c.category_id === Number(formik.values.category_id)
     );
-  }, [formik.values.categoryId, courseList]);
+  }, [formik.values.category_id, courseList]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -105,9 +100,9 @@ export default function PopularCoursesForm({
             </Label>
 
             <Select
-              value={formik.values.categoryId}
+              value={formik.values.category_id}
               onValueChange={(v) => {
-                formik.setFieldValue("categoryId", v);
+                formik.setFieldValue("category_id", v);
                 formik.setFieldValue("courseId", "");
               }}
             >
@@ -116,7 +111,7 @@ export default function PopularCoursesForm({
               </SelectTrigger>
 
               <SelectContent className="w-full">
-                {categoryData?.map((cat: any) => (
+                {categories?.map((cat: any) => (
                   <SelectItem key={cat.id} value={String(cat.id)}>
                     {cat.name}
                   </SelectItem>
@@ -124,9 +119,9 @@ export default function PopularCoursesForm({
               </SelectContent>
             </Select>
 
-            {formik.touched.categoryId && formik.errors.categoryId && (
+            {formik.touched.category_id && formik.errors.category_id && (
               <span className="text-xs text-red-500">
-                {formik.errors.categoryId}
+                {formik.errors.category_id}
               </span>
             )}
           </div>
@@ -138,9 +133,9 @@ export default function PopularCoursesForm({
             </Label>
 
             <Select
-              value={formik.values.courseId}
-              disabled={!formik.values.categoryId}
-              onValueChange={(v) => formik.setFieldValue("courseId", v)}
+              value={formik.values.course_id}
+              disabled={!formik.values.category_id}
+              onValueChange={(v) => formik.setFieldValue("course_id", v)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select course" />
@@ -164,9 +159,9 @@ export default function PopularCoursesForm({
               </SelectContent>
             </Select>
 
-            {formik.touched.courseId && formik.errors.courseId && (
+            {formik.touched.course_id && formik.errors.course_id && (
               <span className="text-xs text-red-500">
-                {formik.errors.courseId}
+                {formik.errors.course_id}
               </span>
             )}
           </div>
@@ -175,9 +170,9 @@ export default function PopularCoursesForm({
           <div className="flex items-center gap-6 mt-2">
             <div className="flex items-center gap-2">
               <Checkbox
-                checked={formik.values.isBestSeller}
+                checked={formik.values.best_seller}
                 onCheckedChange={(v) =>
-                  formik.setFieldValue("isBestSeller", v)
+                  formik.setFieldValue("best_seller", v)
                 }
               />
               <Label className="text-sm font-semibold text-gray-800">
@@ -187,9 +182,9 @@ export default function PopularCoursesForm({
 
             <div className="flex items-center gap-2">
               <Checkbox
-                checked={formik.values.isTrending}
+                checked={formik.values.trending}
                 onCheckedChange={(v) =>
-                  formik.setFieldValue("isTrending", v)
+                  formik.setFieldValue("trending", v)
                 }
               />
               <Label className="text-sm font-semibold text-gray-800">

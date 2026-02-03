@@ -1,10 +1,11 @@
-import { ADD_COURSE_SUCCESS, DELETE_COURSE_SUCCESS, FETCH_COURSES_SUCCESS, UPDATE_COURSE_SUCCESS, FETCH_UPCOMING_COURSE_SUCCESS, ADD_UPCOMING_COURSE_SUCCESS, UPDATE_UPCOMING_COURSE_SUCCESS, DELETE_UPCOMING_COURSE_SUCCESS } from "../constant";
+import { ADD_COURSE_SUCCESS, DELETE_COURSE_SUCCESS, FETCH_COURSES_SUCCESS, UPDATE_COURSE_SUCCESS, FETCH_UPCOMING_COURSE_SUCCESS, ADD_UPCOMING_COURSE_SUCCESS, UPDATE_UPCOMING_COURSE_SUCCESS, DELETE_UPCOMING_COURSE_SUCCESS, FETCH_POPULAR_COURSE_SUCCESS, ADD_POPULAR_COURSE_SUCCESS, DELETE_POPULAR_COURSE_SUCCESS } from "../constant";
 import { API_CALLING } from "../constant/common";
 
 const initialState = {
   loading: false,
   courseList: [],
   upcomingCourseList: [],
+  popularCourseList: [],
   errorData: {},
 };
 
@@ -73,6 +74,26 @@ export const courseReducer = (state = initialState, action: any) => {
       return {
         ...state,
         upcomingCourseList: updatedList,
+      };
+    }
+     case FETCH_POPULAR_COURSE_SUCCESS: {
+      return {
+        ...state,
+        popularCourseList: action.response,
+      };
+    };
+    case ADD_POPULAR_COURSE_SUCCESS:{
+      return {
+        ...state,
+        popularCourseList: [action.response, ...state.popularCourseList],
+      };
+    }
+      case DELETE_POPULAR_COURSE_SUCCESS: {
+      const updatedList = state.popularCourseList.filter((list) =>
+        list?.id !== action.response);
+      return {
+        ...state,
+        popularCourseList: updatedList,
       };
     }
     default:

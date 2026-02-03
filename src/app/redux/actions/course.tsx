@@ -6,7 +6,10 @@ import {
   FETCH_UPCOMING_COURSE, 
   ADD_UPCOMING_COURSE, 
   UPDATE_UPCOMING_COURSE, 
-  DELETE_UPCOMING_COURSE } from "../constant";
+  DELETE_UPCOMING_COURSE,
+  FETCH_POPULAR_COURSE, 
+  ADD_POPULAR_COURSE,
+  DELETE_POPULAR_COURSE} from "../constant";
 
 export function fetchCourses() {
   return {
@@ -57,6 +60,26 @@ export function updateUpcomingCourse(formData: any) {
 export function deleteUpcomingCourse(rowId: any) {
   return {
     type: DELETE_UPCOMING_COURSE,
+    payload: rowId
+  };
+}
+
+export function getPopularCourse() {
+  return {
+    type: FETCH_POPULAR_COURSE,
+  };
+}
+
+export function addPopularCourse(formData: any) {
+  return {
+    type: ADD_POPULAR_COURSE,
+    payload: formData
+  };
+}
+
+export function deletePopularCourse(rowId: any) {
+  return {
+    type: DELETE_POPULAR_COURSE,
     payload: rowId
   };
 }

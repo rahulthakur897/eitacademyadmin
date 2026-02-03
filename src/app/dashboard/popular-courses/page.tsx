@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import DataTable from "@/components/common/table";
 import PopularCourseDelete from "@/components/common/PopularCoursesDeleteDialog";
 import PopularCoursesForm from "./PopularCoursesForm";
-
+import { fetchCategory } from "@/app/redux/actions/category";
+import { fetchCourses, getPopularCourse, addPopularCourse, deletePopularCourse } from "@/app/redux/actions/course";
+import { toast } from "sonner";
 const category = [
   { id: 1, name: "Electronics" },
   { id: 2, name: "Furniture" },
@@ -22,7 +25,7 @@ const subCategory = [
 
 export default function SubCategory() {
   const [stockData, setStockData] = useState(subCategory);
-
+  const dispatch = useDispatch();
   const [openSheet, setOpenSheet] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -32,19 +35,27 @@ export default function SubCategory() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | "all">("all");
 
-  const combined = stockData.map((sub) => ({
+  const { categoryData } = useSelector((state: any) => state.category);
+  const { courseList, popularCourseList } = useSelector((state: any) => state.course);
+  
+  const combined = popularCourseList.map((sub : any) => ({
     ...sub,
-    categoryName: category.find((c) => c.id === sub.parentId)?.name || "Unknown",
+    categoryName: categoryData.find((c : any) => c.id === sub.category_id)?.name || "Unknown",
   }));
 
-  const filteredStock = combined
-    .filter((item) =>
-      selectedCategory === "all" ? true : item.parentId === selectedCategory
-    )
-    .filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  useEffect(() => {
+      dispatch(fetchCategory());
+      dispatch(fetchCourses())
+      dispatch(getPopularCourse())
+     
+    }, [dispatch]);
 
+  const filterRecords = combined
+    .filter((item : any) =>
+      selectedCategory === "all" ? true : item.category_id === selectedCategory
+      ||  item?.name?.toLowerCase().includes(searchQuery.toLowerCase()
+    ));
+  
   const handleAdd = () => {
     setMode("add");
     setSelectedStock(null);
@@ -57,25 +68,14 @@ export default function SubCategory() {
   };
 
   const handleSave = (data: any) => {
-    if (mode === "add") {
-      setStockData((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          parentId: selectedCategory === "all" ? 1 : selectedCategory,
-          ...data,
-        },
-      ]);
-    } else {
-      setStockData((prev) =>
-        prev.map((e) => (e.id === selectedStock.id ? { ...e, ...data } : e))
-      );
-    }
+    dispatch(addPopularCourse(data));
+    toast.success("Course added successfully");
   };
 
   const handleConfirmDelete = () => {
-    setStockData((prev) => prev.filter((item) => item.id !== selectedStock.id));
+    dispatch(deletePopularCourse(selectedStock.id));
     setOpenDeleteDialog(false);
+    toast.success("Data deleted successfully")
   };
 
   return (
@@ -105,7 +105,7 @@ export default function SubCategory() {
             className="bg-white border border-blue-600 text-blue-700 px-2 py-2 rounded-md text-sm"
           >
             <option value="all">All Categories</option>
-            {category.map((cat) => (
+            {categoryData.map((cat : any) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
@@ -130,7 +130,7 @@ export default function SubCategory() {
           { colname: "categoryName", value: "Category" },
           { colname: "action", value: "Action" },
         ]}
-        rows={filteredStock}
+        rows={filterRecords}
         delRecord={handleDelete}
         pageName="popular-course"
       />
@@ -139,7 +139,8 @@ export default function SubCategory() {
         open={openSheet}
         onClose={() => setOpenSheet(false)}
         onSave={handleSave}
-        categories={category}
+        categories={categoryData}
+        courseList = { courseList}
       />
 
       <PopularCourseDelete

@@ -1,8 +1,8 @@
 "use client";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { MailIcon, EyeIcon, EyeOffIcon, LockKeyholeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 import { SignInSchema } from "@/utils/validation";
 import { useRouter } from "next/navigation";
@@ -13,25 +13,20 @@ import { useSelector } from "react-redux";
 export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
-
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { loading } = useSelector((state: any) => state.user);
 
   const formik = useFormik({
-    initialValues: { email: "", password: "" },
+    initialValues: {
+      email: "",
+      password: "",
+    },
     validationSchema: SignInSchema,
     onSubmit: (values) => {
       dispatch(adminLogin(values));
       router.push("/dashboard");
     },
   });
-
-  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = formik;
-
-  const isActive =
-    values.email &&
-    !errors.email &&
-    values.password &&
-    !errors.password;
 
   return (
     <div className="min-h-screen w-full relative flex items-center justify-center bg-white">
@@ -45,7 +40,7 @@ export default function Login() {
       ></div>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={formik.handleSubmit}
         className="relative z-10 bg-white border border-blue-300 
         shadow-[0_4px_15px_rgba(0,0,0,0.08)] rounded-2xl p-8 w-full max-w-md"
       >
@@ -59,71 +54,49 @@ export default function Login() {
         </div>
 
         {/* EMAIL */}
-        <div className="w-full mb-4">
-          <Label className="text-sm font-semibold text-gray-700">
-            Email Address <span className="text-blue-600">*</span>
-          </Label>
-
-          <div className="relative mt-1">
-            <Mail className="absolute left-3 top-3 text-blue-600" size={18} />
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="pl-10 bg-white border border-blue-300 
-              rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-700"
-            />
-          </div>
-
-          {touched.email && errors.email && (
-            <p className="text-sm text-blue-600 mt-1">{errors.email}</p>
-          )}
-        </div>
+        <Input
+          className="mb-4"
+          type="email"
+          placeholder="Enter your email"
+          fieldLabel="Email Address"
+          required
+          startIcon={<MailIcon className="h-5 w-5 text-[#99A0AE]" />}
+          error={formik.touched.email && formik.errors.email}
+          {...formik.getFieldProps("email")}
+        />
 
         {/* PASSWORD */}
-        <div className="w-full mb-6">
-          <Label className="text-sm font-semibold text-gray-700">
-            Password <span className="text-blue-600">*</span>
-          </Label>
-
-          <div className="relative mt-1">
-            <Lock className="absolute left-3 top-3 text-blue-600" size={18} />
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="pl-10 bg-white border border-blue-300 
-              rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-700"
-            />
-          </div>
-
-          {touched.password && errors.password && (
-            <p className="text-sm text-blue-600 mt-1">{errors.password}</p>
-          )}
-        </div>
+        <Input
+          className="mb-4"
+          type={isPasswordVisible ? "text" : "password"}
+          placeholder="Enter your password"
+          fieldLabel="Password"
+          required
+          startIcon={<LockKeyholeIcon className="h-5 w-5 text-[#99A0AE]" />}
+          error={formik.touched.password && formik.errors.password}
+          endIcon={
+            isPasswordVisible ? (
+              <EyeIcon
+                className="h-5 w-5 text-[#99A0AE] cursor-pointer"
+                onClick={() => setIsPasswordVisible(false)}
+              />
+            ) : (
+              <EyeOffIcon
+                className="h-5 w-5 text-[#99A0AE] cursor-pointer"
+                onClick={() => setIsPasswordVisible(true)}
+              />
+            )
+          }
+          {...formik.getFieldProps("password")}
+        />
 
         <Button
           type="submit"
-          disabled={!isActive || loading}
-          className={`w-full text-[15px] font-medium py-3 rounded-lg transition flex items-center justify-center gap-2 cursor ${isActive && !loading
-            ? "bg-blue-600 text-white hover:bg-[#003b7d]"
-            : "bg-blue-300 text-white cursor-not-allowed"
-            }`}
+          size="lg"
+          className="w-full bg-[#003b7d] hover:bg-[#0056b3]"
+          disabled={loading}
         >
-          {loading ? (
-            <>
-              <Loader2 className="animate-spin" size={18} />
-              Logging in...
-            </>
-          ) : (
-            "Login"
-          )}
+          {loading ? "Logging In..." : "Log In"}
         </Button>
 
         {/* FOOTER */}

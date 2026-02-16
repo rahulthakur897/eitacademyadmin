@@ -1,17 +1,5 @@
 "use client";
 
-import {
-  LineChart,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  Line,
-  ResponsiveContainer,
-  ComposedChart,
-  Bar,
-} from "recharts";
-
 export default function Dashboard() {
   // GRAPH DATA
   const studentData = [
@@ -127,56 +115,6 @@ export default function Dashboard() {
               ))}
             </div>
           </div>
-
-          {/* GRAPH */}
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={[
-              { month: "Jan", bar: 72, line1: 50, line2: 25 },
-              { month: "Feb", bar: 85, line1: 60, line2: 30 },
-              { month: "Mar", bar: 70, line1: 65, line2: 28 },
-              { month: "Apr", bar: 98, line1: 55, line2: 22 },
-              { month: "May", bar: 50, line1: 70, line2: 26 },
-              { month: "Jun", bar: 98, line1: 48, line2: 18 },
-              { month: "Jul", bar: 78, line1: 55, line2: 32 },
-              { month: "Aug", bar: 80, line1: 60, line2: 28 },
-              { month: "Sep", bar: 92, line1: 65, line2: 30 },
-              { month: "Oct", bar: 34, line1: 47, line2: 20 },
-              { month: "Nov", bar: 79, line1: 50, line2: 29 },
-              { month: "Dec", bar: 100, line1: 52, line2: 22 },
-            ]}>
-              <CartesianGrid stroke="#e0e0e0" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip />
-
-              {/* Purple Bars */}
-              <Bar
-                dataKey="bar"
-                barSize={20}
-                radius={[10, 10, 10, 10]}
-                fill="#7a4da0"
-              />
-
-              {/* Green Line */}
-              <Line
-                type="monotone"
-                dataKey="line1"
-                stroke="#4CAF50"
-                strokeWidth={2.5}
-                dot={false}
-              />
-
-              {/* Red Dotted Line */}
-              <Line
-                type="monotone"
-                dataKey="line2"
-                stroke="#FF5A5A"
-                strokeDasharray="5 5"
-                strokeWidth={2}
-                dot={false}
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
         </div>
 
       </div>

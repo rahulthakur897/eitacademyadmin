@@ -17,7 +17,7 @@ import { takeLatest } from "redux-saga/effects";
 import { Api } from "@/services/api";
 import { BASEURL } from "@/utils/constant";
 
-function* fetchCategory() {
+function* fetchCategory(): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.get(BASEURL, `/category/all`);
@@ -32,7 +32,7 @@ function* fetchCategory() {
   }
 }
 
-function* addCategory(data) {
+function* addCategory(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/category/add`, data.payload);
@@ -47,7 +47,7 @@ function* addCategory(data) {
   }
 }
 
-function* updateCategory(data) {
+function* updateCategory(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/category/update`, data.payload);
@@ -62,7 +62,7 @@ function* updateCategory(data) {
   }
 }
 
-function* deleteCategory(data) {
+function* deleteCategory(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.delete(BASEURL, `/category/delete/${data.payload}`);

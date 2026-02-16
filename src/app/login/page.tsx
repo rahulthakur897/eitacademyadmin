@@ -69,7 +69,7 @@ export default function Login() {
             <Input
               id="email"
               type="email"
-              placeholder="admin@example.com"
+              placeholder="Enter your email"
               value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}

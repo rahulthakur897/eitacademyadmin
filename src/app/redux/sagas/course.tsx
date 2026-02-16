@@ -28,7 +28,7 @@ import { takeLatest } from "redux-saga/effects";
 import { Api } from "@/services/api";
 import { BASEURL } from "@/utils/constant";
 
-function* fetchCourses() {
+function* fetchCourses(): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.get(BASEURL, `/course/all`);
@@ -43,7 +43,7 @@ function* fetchCourses() {
   }
 }
 
-function* addCourse(data) {
+function* addCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/course/add`, data.payload);
@@ -58,7 +58,7 @@ function* addCourse(data) {
   }
 }
 
-function* updateCourse(data) {
+function* updateCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/course/update`, data.payload);
@@ -73,7 +73,7 @@ function* updateCourse(data) {
   }
 }
 
-function* deleteCourse(data) {
+function* deleteCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.delete(BASEURL, `/course/delete/${data.payload}`);
@@ -88,7 +88,7 @@ function* deleteCourse(data) {
   }
 }
 
-function* fetchUpcomingCourse() {
+function* fetchUpcomingCourse(): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.get(BASEURL, `/course/upcoming`);
@@ -103,7 +103,7 @@ function* fetchUpcomingCourse() {
   }
 }
 
-function* addUpcomingCourse(data) {
+function* addUpcomingCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/course/upcoming/add`, data.payload);
@@ -119,7 +119,7 @@ function* addUpcomingCourse(data) {
   }
 }
 
-function* updateUpcomingCourse(data) {
+function* updateUpcomingCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/course/upcoming/update`, data.payload);
@@ -134,7 +134,7 @@ function* updateUpcomingCourse(data) {
     yield put({ type: API_FAILURE, error: errorObj });
   }
 }
-function* deleteUpcomingCourse(data) {
+function* deleteUpcomingCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.delete(BASEURL, `/course/upcoming/delete/${data.payload}`);
@@ -149,7 +149,7 @@ function* deleteUpcomingCourse(data) {
   }
 }
 // getPopularCourse
-function* getPopularCourse() {
+function* getPopularCourse(): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.get(BASEURL, `/course/popular`);
@@ -164,7 +164,7 @@ function* getPopularCourse() {
   }
 }
 
-function* addPopularCourse(data) {
+function* addPopularCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/course/popular/add`, data.payload);
@@ -180,7 +180,7 @@ function* addPopularCourse(data) {
   }
 }
 
-function* deletePopularCourse(data) {
+function* deletePopularCourse(data: any): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.delete(BASEURL, `/course/popular/delete/${data.payload}`);

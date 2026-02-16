@@ -39,7 +39,7 @@ export type Category = {
 export interface UpcomingCourse {
   id?: number;
 
-  course_id: number;              // Course title
+  course_id: string;              // Course title
   category_id: number | "";  // Category
   faculty_id: number | "";   // Instructor
   level: string;             // Beginner | Intermediate | Advanced

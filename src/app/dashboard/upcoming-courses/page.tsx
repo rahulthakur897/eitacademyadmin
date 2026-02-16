@@ -41,7 +41,7 @@ export default function UpcomingCourse() {
     
       const combinedList = getCombinedList();
     // SEARCH FILTER
-    const filteredStock = combinedList.filter((item) =>
+    const filteredStock = combinedList.filter((item: any) =>
         item?.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -124,7 +124,6 @@ export default function UpcomingCourse() {
                     { colname: "batch_start", value: "Start Date" },
                     { colname: "demo_duration", value: "Duration" },
                     { colname: "faculty_id", value: "Instructor" },
-                    { colname: "level", value: "Level" },
                     { colname: "action", value: "Action" },
                 ]}
                 rows={filteredStock}

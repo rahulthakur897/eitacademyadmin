@@ -191,26 +191,6 @@ export default function UpcomingCourseForm({
                   </Select>
                 </div>
 
-                {/* LEVEL */}
-                <div className="space-y-1">
-                  <Label className=" text-sm font-semibold text-gray-800">Level</Label>
-                  <Select
-                    value={formik.values.level}
-                    onValueChange={(value) =>
-                      formik.setFieldValue("level", value)
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Beginner">Beginner</SelectItem>
-                      <SelectItem value="Intermediate">Intermediate</SelectItem>
-                      <SelectItem value="Advanced">Advanced</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
                 {/* DATES */}
                 <div className="grid grid-cols-2 gap-4">
                   <Input
@@ -251,16 +231,6 @@ export default function UpcomingCourseForm({
                     }
                   />
 
-                  <Input
-                    fieldLabel="Classes On"
-                    value={formik.values.classes}
-                    onChange={(e) =>
-                      formik.setFieldValue(
-                        "classes",
-                        e.target.value
-                      )
-                    }
-                  />
                 </div>
 
                 {/* ACTIONS */}

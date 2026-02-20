@@ -30,7 +30,6 @@ export interface CourseFormErrors {
   course_language?: string;
 }
 
-
 export type Category = {
   id: string;
   name: string;
@@ -38,14 +37,23 @@ export type Category = {
 
 export interface UpcomingCourse {
   id?: number;
+  course_id: string;
+  category_id: number | "";
+  faculty_id: number | "";
+  level: string;
+  batch_start: string;
+  demo_date: string;
+  demo_duration: string;
+}
 
-  course_id: string;              // Course title
-  category_id: number | "";  // Category
-  faculty_id: number | "";   // Instructor
-  level: string;             // Beginner | Intermediate | Advanced
+export interface Blog {
+  id?: number;
+  image: File | string;
+  title: string;
+  slug: string;
+  category_id: string;
+  author: "";
+  shortdesc: string;
+  description: string;
 
-  batch_start: string;       // YYYY-MM-DD
-  demo_date: string;         // YYYY-MM-DD
-  demo_duration: string;     // e.g. "6 Weeks"
-  classes: string;           // e.g. "Mon, Wed, Fri"
 }

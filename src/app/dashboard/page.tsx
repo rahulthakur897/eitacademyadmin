@@ -1,15 +1,6 @@
 "use client";
 
 export default function Dashboard() {
-  // GRAPH DATA
-  const studentData = [
-    { month: "Jan", students: 50 },
-    { month: "Feb", students: 72 },
-    { month: "Mar", students: 120 },
-    { month: "Apr", students: 90 },
-    { month: "May", students: 150 },
-    { month: "Jun", students: 200 },
-  ];
 
   // RIGHT PANEL — RECENT STUDENTS
   const students = [

@@ -1,56 +1,35 @@
 "use client";
 
-import { useState } from "react";
 import DataTable from "@/components/common/table";
+import { fetchEnquiry } from "@/redux/actions/enquiry";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
-// EMPLOYEE LIST
-const employeesList = [
- {
-  id: 1,
-  name: "Aarav Sharma",
-  inOutTime: "09:00 AM - 06:00 PM",
-  location: "Lucknow"
-},
+export default function Enquiry() {
+    const dispatch = useDispatch<any>();
+  const { enquiryList } = useSelector(
+    (state: any) => state.enquiry
+  );
 
-  {
-    id: 2,
-    name: "Siya Patel",
-   inOutTime: "09:00 AM - 06:00 PM",
-  location: "Lucknow"
-  },
-  {
-    id: 3,
-    name: "Kabir Mehta",
-   inOutTime: "09:00 AM - 06:00 PM",
-  location: "Lucknow"
-  },
-  {
-    id: 4,
-    name: "Myra Rao",
-   inOutTime: "09:00 AM - 06:00 PM",
-  location: "Lucknow"
-  },
-  {
-    id: 5,
-    name: "Vivaan Khanna",
-  inOutTime: "09:00 AM - 06:00 PM",
-  location: "Lucknow"
-  },
+    useEffect(() => {
+      dispatch(fetchEnquiry());
+    }, [dispatch]);
 
-];
-
-export default function EmployeeDirectory() {
+    console.log("enquiryList", enquiryList)
   return (
     <main className="p-4">
       <DataTable
         columns={[
           { colname: "idx", value: "S No." },
           { colname: "name", value: "Name" },
-          { colname: "inOutTime", value: "In-Out Time" },
-          { colname: "location", value: "Location" },
+          { colname: "email", value: "Email" },
+          { colname: "contact", value: "Contact No." },
+          { colname: "message", value: "Message" },
+          { colname: "status", value: "Status" },
         ]}
-        rows={employeesList}
-        pageName="employee"
+        rows={enquiryList}
+        pageName="enquiryList"
       />
     </main>
   );

@@ -49,11 +49,11 @@ export default function DataTable({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const ITEMS_PER_PAGE = 8;
 
-  const totalPages = Math.max(1, Math.ceil(rows.length / ITEMS_PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil(rows?.length / ITEMS_PER_PAGE));
 
   const paginatedItems = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return rows.slice(start, start + ITEMS_PER_PAGE);
+    return rows?.slice(start, start + ITEMS_PER_PAGE);
   }, [rows, currentPage]);
 
   const handlePageChange = (page: number) => {
@@ -120,7 +120,7 @@ export default function DataTable({
           </TableHeader>
 
           <TableBody>
-            {paginatedItems.length === 0 ? (
+            {paginatedItems?.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length + (columns.some(c => c.colname === "action") ? 1 : 0)}
@@ -139,7 +139,7 @@ export default function DataTable({
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedItems.map((item, i) => (
+              paginatedItems?.map((item, i) => (
                 <TableRow
                   key={i}
                   className="border-b border-gray-200 hover:bg-blue-50"
@@ -196,7 +196,7 @@ export default function DataTable({
       </div>
 
       {/* PAGINATION */}
-      {rows.length > ITEMS_PER_PAGE && (
+      {rows?.length > ITEMS_PER_PAGE && (
         <div className="flex justify-between items-center text-gray-700">
           <p className="text-sm text-gray-600">
             Page {currentPage} of {totalPages}

@@ -30,8 +30,9 @@ const roleMenus: Record<string, MenuItem[]> = {
     { name: "Popular Courses", href: "/dashboard/popular-courses", icon: VenuesIcon },
     { name: "Upcoming Courses", href: "/dashboard/upcoming-courses", icon: CategoryUpcomingIcon },
     { name: "Faculty", href: "/dashboard/faculty", icon: AttendanceIcon },
-    { name: "Student Enquiry", href: "/dashboard/enquiries", icon: SubCategoryIcon },
     { name: "Student List", href: "/dashboard/students-list", icon: GuestIcon },
+    { name: "Student Enquiry", href: "/dashboard/enquiries", icon: SubCategoryIcon },
+    { name: "Blogs", href: "/dashboard/blog", icon: SubCategoryIcon },
   ],
 };
 

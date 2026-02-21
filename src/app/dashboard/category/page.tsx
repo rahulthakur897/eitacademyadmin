@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import DataTable from "@/components/common/table";
 import CategoryDialog from "@/components/common/CategoryForm";
 import CategoryDelete from "@/components/common/CategoryDeleteDialog";
-import { fetchCategory, addCategory,updateCategory,deleteCategory } from "@/app/redux/actions/category";
+import { fetchCategory, addCategory,updateCategory,deleteCategory } from "@/redux/actions/category";
 import { toast } from "sonner";
 
 export default function Category() {

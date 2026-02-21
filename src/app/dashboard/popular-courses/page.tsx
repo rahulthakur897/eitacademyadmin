@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import DataTable from "@/components/common/table";
 import PopularCourseDelete from "@/components/common/PopularCoursesDeleteDialog";
 import PopularCoursesForm from "./PopularCoursesForm";
-import { fetchCategory } from "@/app/redux/actions/category";
-import { fetchCourses, getPopularCourse, addPopularCourse, deletePopularCourse } from "@/app/redux/actions/course";
+import { fetchCategory } from "@/redux/actions/category";
+import { fetchCourses, getPopularCourse, addPopularCourse, deletePopularCourse } from "@/redux/actions/course";
 import { toast } from "sonner";
 const category = [
   { id: 1, name: "Electronics" },

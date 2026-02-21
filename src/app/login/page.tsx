@@ -7,8 +7,8 @@ import { useFormik } from "formik";
 import { SignInSchema } from "@/utils/validation";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { adminLogin } from "../redux/actions/user";
 import { useSelector } from "react-redux";
+import { adminLogin } from "@/redux/actions/user";
 
 export default function Login() {
   const router = useRouter();

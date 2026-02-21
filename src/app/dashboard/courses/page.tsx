@@ -8,13 +8,13 @@ import DataTable from "@/components/common/table";
 import DeleteCourse from "@/components/common/DeleteCourse";
 import CoursesForm from "./CoursesForm";
 
-import { fetchCategory } from "@/app/redux/actions/category";
+import { fetchCategory } from "@/redux/actions/category";
 import {
   fetchCourses,
   addCourse,
   deleteCourse,
   updateCourse,
-} from "@/app/redux/actions/course";
+} from "@/redux/actions/course";
 
 export default function CoursesPage() {
   const dispatch = useDispatch();

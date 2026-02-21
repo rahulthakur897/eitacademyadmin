@@ -1,3 +1,4 @@
+import { CourseFormData } from "@/utils/type";
 import { ADD_COURSE_SUCCESS, DELETE_COURSE_SUCCESS, FETCH_COURSES_SUCCESS, UPDATE_COURSE_SUCCESS, FETCH_UPCOMING_COURSE_SUCCESS, ADD_UPCOMING_COURSE_SUCCESS, UPDATE_UPCOMING_COURSE_SUCCESS, DELETE_UPCOMING_COURSE_SUCCESS, FETCH_POPULAR_COURSE_SUCCESS, ADD_POPULAR_COURSE_SUCCESS, DELETE_POPULAR_COURSE_SUCCESS } from "../constant";
 import { API_CALLING } from "../constant/common";
 
@@ -8,7 +9,6 @@ const initialState = {
   popularCourseList: [],
   errorData: {},
 };
-
 
 export const courseReducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -31,7 +31,7 @@ export const courseReducer = (state = initialState, action: any) => {
       };
     }
     case UPDATE_COURSE_SUCCESS: {
-      const updatedList = state.courseList.map((list) =>
+      const updatedList = state.courseList.map((list: CourseFormData) =>
         list?.id === action.response?.id ? action.response : list
       );
       return {
@@ -40,7 +40,7 @@ export const courseReducer = (state = initialState, action: any) => {
       };
     }
     case DELETE_COURSE_SUCCESS: {
-      const updatedList = state.courseList.filter((list) =>
+      const updatedList = state.courseList.filter((list: CourseFormData) =>
         list?.id !== action.response);
       return {
         ...state,
@@ -60,7 +60,7 @@ export const courseReducer = (state = initialState, action: any) => {
       };
     }
       case UPDATE_UPCOMING_COURSE_SUCCESS:{
-        const updatedList = state.upcomingCourseList.map((list) =>
+        const updatedList = state.upcomingCourseList.map((list: CourseFormData) =>
         list?.id === action.response?.id ? action.response : list
       );
       return {
@@ -69,7 +69,7 @@ export const courseReducer = (state = initialState, action: any) => {
       };
     }
       case DELETE_UPCOMING_COURSE_SUCCESS: {
-      const updatedList = state.upcomingCourseList.filter((list) =>
+      const updatedList = state.upcomingCourseList.filter((list: CourseFormData) =>
         list?.id !== action.response);
       return {
         ...state,
@@ -89,7 +89,7 @@ export const courseReducer = (state = initialState, action: any) => {
       };
     }
       case DELETE_POPULAR_COURSE_SUCCESS: {
-      const updatedList = state.popularCourseList.filter((list) =>
+      const updatedList = state.popularCourseList.filter((list: CourseFormData) =>
         list?.id !== action.response);
       return {
         ...state,

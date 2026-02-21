@@ -108,3 +108,56 @@ export const upcomingCourseForm = (values: UpcomingCourse) => {
   return errors;
 };
 
+
+
+import { FormikErrors } from "formik";
+import { Blog } from "@/utils/type";
+
+export const validateBlogForm = (
+  values: Blog
+): FormikErrors<Blog> => {
+  const errors: FormikErrors<Blog> = {};
+
+  // 🔹 Title
+  if (!values.title?.trim()) {
+    errors.title = "Title is required";
+  } else if (values.title.length < 3) {
+    errors.title = "Title must be at least 3 characters";
+  }
+
+  // 🔹 Slug
+  if (!values.slug?.trim()) {
+    errors.slug = "Slug is required";
+  } else if (!/^[a-z0-9-]+$/.test(values.slug)) {
+    errors.slug = "Slug must contain only lowercase letters, numbers, and hyphens";
+  }
+
+  // 🔹 Category
+  if (!values.category_id) {
+    errors.category_id = "Category is required";
+  }
+
+  // 🔹 Author
+  if (!values.author?.trim()) {
+    errors.author = "Author name is required";
+  } else if (!/^[A-Za-z\s]+$/.test(values.author)) {
+    errors.author = "Author name should contain only letters";
+  }
+
+  // 🔹 Short Description
+  if (!values.shortdesc || values.shortdesc === "<p><br></p>") {
+    errors.shortdesc = "Short description is required";
+  }
+
+  // 🔹 Overview
+  if (!values.description || values.description === "<p><br></p>") {
+    errors.description = "Description is required";
+  }
+
+  // 🔹 Image
+  if (!values.image) {
+    errors.image = "Image is required";
+  }
+
+  return errors;
+};

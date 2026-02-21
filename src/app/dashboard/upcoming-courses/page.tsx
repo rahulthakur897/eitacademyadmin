@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import DataTable from "@/components/common/table";
 import UpcomingCourseDelete from "@/components/common/UpcomingCourseDeleteDialog";
-import { fetchUpcomingCourse, addUpcomingCourse,updateUpcomingCourse, deleteUpcomingCourse} from "@/app/redux/actions/course";
-import { fetchCategory } from "@/app/redux/actions/category";
-import { getInstructorList } from "@/app/redux/actions/user";
+import { fetchUpcomingCourse, addUpcomingCourse,updateUpcomingCourse, deleteUpcomingCourse} from "@/redux/actions/course";
+import { fetchCategory } from "@/redux/actions/category";
+import { getInstructorList } from "@/redux/actions/user";
 import { useDispatch, useSelector } from "react-redux";
 import UpcomingCourseForm from "./UpcomingCourseForm";
 

@@ -48,7 +48,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "src/utils/validation.ts"  ],
+, "src/utils/validation.ts", "src/app/redux/actions/user.ts"  ],
   "exclude": [
     "node_modules"
   ]

@@ -21,8 +21,8 @@ import { Pencil, PlusCircle } from "lucide-react";
 import { upcomingCourseForm } from "@/utils/validation";
 import { UpcomingCourse } from "@/utils/type";
 import { useEffect, useMemo } from "react";
-import { fetchCategory } from "@/app/redux/actions/category";
-import { fetchCourses } from "@/app/redux/actions/course";
+import { fetchCategory } from "@/redux/actions/category";
+import { fetchCourses } from "@/redux/actions/course";
 import { useSelector, useDispatch } from "react-redux";
 
 interface Props {

@@ -76,9 +76,12 @@ export default function BlogPage() {
         let imageName = data.image;
 
         if (data.image instanceof File) {
-          imageName = await uploadImage(data.image);
+         const uploadRes = await uploadImage(data.image);
+           if (uploadRes?.status) {
+          imageName = uploadRes.filename;
         }
-
+        }
+        
         const payload: Blog = {
           ...data,
           image: imageName,
@@ -105,7 +108,6 @@ export default function BlogPage() {
 
   const handleConfirmDelete = () => {
     if (!selectedRecord) return;
-
     dispatch(deleteBlog(selectedRecord.id));
     toast.success("Blog deleted successfully");
     setOpenDeleteDialog(false);
@@ -146,6 +148,7 @@ export default function BlogPage() {
       <DataTable
         columns={[
           { colname: "idx", value: "S No." },
+          { colname: "image", value: "Image" },
           { colname: "title", value: "Title" },
           { colname: "shortdesc", value: "Short Description" },
           { colname: "action", value: "Action" },
@@ -153,7 +156,7 @@ export default function BlogPage() {
         rows={filteredBlogs}
         editModal={handleEdit}
         delRecord={handleDelete}
-        pageName="course"
+        pageName="blog"
       />
 
       {/* FORM */}

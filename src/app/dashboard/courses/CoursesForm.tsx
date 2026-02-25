@@ -103,7 +103,7 @@ export default function CoursesForm({
             const hasImage =
               !!formik.values.course_logo &&
               previewUrl !== "/assets/images/icons/empty.png";
-            console.log("hasimage", hasImage)
+            
             return (
               <Form className="space-y-6 mt-6">
                 {/* IMAGE */}

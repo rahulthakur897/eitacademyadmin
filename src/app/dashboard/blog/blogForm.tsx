@@ -66,9 +66,7 @@ export default function BlogForm({
 
   useEffect(() => {
     if (defaultValues?.image) {
-      console.log("image", defaultValues.image)
-
-      setPreviewUrl(`/assets/images/blog/${defaultValues.image}`);
+       setPreviewUrl(`/assets/images/blog/${defaultValues.image}`);
     } else {
       setPreviewUrl("/assets/images/icons/empty.png");
     }

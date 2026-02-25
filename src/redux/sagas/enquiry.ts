@@ -10,7 +10,6 @@ function* fetchEnquiry(): Generator<any, void, any> {
   try {
     yield put({ type: API_CALLING });
     const response = yield Api.get(BASEURL, `/enquiry/all`);
-    console.log("response", response)
     const apiResponse = response.data;
     yield put({ type: FETCH_ENQUIRY_SUCCESS, response: apiResponse?.data });
   } catch (error) {

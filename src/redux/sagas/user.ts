@@ -12,14 +12,18 @@ function* adminLoginAction(data: any): Generator<any, void, any> {
     yield put({ type: API_CALLING });
     const response = yield Api.post(BASEURL, `/auth/admin/login`, { username: email, password });
     const apiResponse = response.data;
-    yield put({ type: ADMIN_LOGIN_SUCCESS, response: apiResponse?.data });
-  } catch (error) {
-    const errorObj = {
-      status: 401,
-      statusText: "Unauthorized - Invalid credentials",
-    };
-    yield put({ type: ADMIN_LOGIN_ERROR, error: errorObj });
-  }
+    if (response.status) {
+            yield put({ type: ADMIN_LOGIN_SUCCESS, response: apiResponse?.data });
+        } else {
+            yield put({ type: ADMIN_LOGIN_ERROR, response: apiResponse?.data });
+      }
+  } catch (error: any) {
+        if(error.response && error.response.status === 401) {
+            yield put({ type: ADMIN_LOGIN_ERROR, response: error.response.data });
+        } else {
+            yield put({ type: API_FAILURE, error: error.message });
+        }
+    }
 }
 
 function* getInstructorList(): Generator<any, void, any> {

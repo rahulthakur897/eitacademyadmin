@@ -4,3 +4,5 @@ export const ADMIN_LOGIN_ERROR="admin_login_error";
 
 export const GET_INSTRUCTOR_LIST = "get_instructor_list";
 export const GET_INSTRUCTOR_LIST_SUCCESS = "get_instructor_list_success";
+export const ADMIN_LOGOUT = "admin_logout";
+export const ADMIN_LOGOUT_SUCCESS = "admin_logout_success";

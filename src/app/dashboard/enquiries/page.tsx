@@ -12,11 +12,10 @@ export default function Enquiry() {
     (state: any) => state.enquiry
   );
 
-    useEffect(() => {
-      dispatch(fetchEnquiry());
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchEnquiry());
+  }, [dispatch]);
 
-    console.log("enquiryList", enquiryList)
   return (
     <main className="p-4">
       <DataTable

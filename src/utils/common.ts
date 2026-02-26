@@ -6,3 +6,11 @@ export const generateSlug = (text :any) => {
     .replace(/\s+/g, '-') // Replace spaces with hyphens
     .replace(/-+/g, '-'); // Remove multiple hyphens
 };
+
+export const getSessionData = (key: string) => {
+  if (typeof window !== "undefined") {
+    const data = sessionStorage.getItem(key);
+    return data ? JSON.parse(data) : "";
+  }
+  return {};
+};

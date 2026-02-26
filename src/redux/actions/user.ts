@@ -1,4 +1,4 @@
-import { ADMIN_LOGIN_ACTION, GET_INSTRUCTOR_LIST } from "../constant/user";
+import { ADMIN_LOGIN_ACTION, ADMIN_LOGOUT, GET_INSTRUCTOR_LIST } from "../constant/user";
 
 export function adminLogin(data: any) { 
 
@@ -13,4 +13,10 @@ export function getInstructorList(){
   return{
     type: GET_INSTRUCTOR_LIST,
   }
+}
+
+export function doLogout() {
+  return {
+    type: ADMIN_LOGOUT
+  };
 }

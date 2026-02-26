@@ -1,16 +1,43 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import LeftMenu from "@/components/common/leftMenuBar";
 import { Toaster } from "sonner";
 import { usePathname } from "next/navigation";
-
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { doLogout } from "@/redux/actions/user";
+import { getSessionData } from "@/utils/common";
 interface RootLayoutProps {
   children: ReactNode;
 }
 
 export default function RootLayouts({ children }: RootLayoutProps) {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const [isAllowed, setIsAllowed] = useState<boolean>(false);
+  const userDetail = getSessionData("adminData");
+  
   const pathname = usePathname();
+  const { isAdminLoggedIn } = useSelector(
+    (state: any) => state.user);
+
+  useEffect(() => {
+    const isLoggedIn = getSessionData("isAdminLoggedIn");
+    if (!isLoggedIn) {
+      router.replace("/login");
+    }
+    setIsAllowed(true);
+  }, [isAdminLoggedIn]);
+
+  if (!isAllowed) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <span className="text-gray-500">Checking access...</span>
+      </div>
+    );
+  }
+  
 
   const lastSegment =
     pathname?.split("/").filter(Boolean).pop() ?? "dashboard";
@@ -21,7 +48,7 @@ export default function RootLayouts({ children }: RootLayoutProps) {
     .replace(/-/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
-const pageTitle = toTitleCase(lastSegment);
+  const pageTitle = toTitleCase(lastSegment);
 
 
   const isDashboard = pathname === "/dashboard";
@@ -41,18 +68,19 @@ const pageTitle = toTitleCase(lastSegment);
             </span>
           </div>
         </div>
-
+        <div className="flex items-center gap-4">
+          <h3 className=" font-medium capitalize">  
+              Hi, {userDetail?.name} 👋
+          </h3>
         {/* RIGHT — Logout Button */}
         <button
           className="text-white bg-[#003b7d] px-4 py-2 rounded-md font-semibold 
           hover:bg-[#002a56] transition shadow-md"
-          onClick={() => {
-            sessionStorage.removeItem("isAdminLoggedIn");
-            window.location.href = "/login";
-          }}
+          onClick={() => dispatch(doLogout())}
         >
           Logout
         </button>
+        </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">

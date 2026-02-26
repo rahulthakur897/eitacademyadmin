@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MailIcon, EyeIcon, EyeOffIcon, LockKeyholeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const { loading } = useSelector((state: any) => state.user);
+  const { loading, isAdminLoggedIn, adminData ,errorMsg} = useSelector((state: any) => state.user);
 
   const formik = useFormik({
     initialValues: {
@@ -24,9 +24,18 @@ export default function Login() {
     validationSchema: SignInSchema,
     onSubmit: (values) => {
       dispatch(adminLogin(values));
-      router.push("/dashboard");
+      // router.push("/dashboard");
     },
   });
+
+useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isLoggedIn = sessionStorage.getItem("isAdminLoggedIn");
+      if (isLoggedIn === "true") {
+        router.push("/dashboard");
+      }
+    }
+  }, [isAdminLoggedIn, router]);
 
   return (
     <div className="min-h-screen w-full relative flex items-center justify-center bg-white">
@@ -89,7 +98,12 @@ export default function Login() {
           }
           {...formik.getFieldProps("password")}
         />
-
+ {/* REDUX ERROR */}
+            {errorMsg && (
+              <p className="text-red-600 text-sm text-center">
+                {errorMsg}
+              </p>
+            )}
         <Button
           type="submit"
           size="lg"

@@ -49,7 +49,7 @@ export default function CategoryForm({
   };
 
 // Handle name change - auto-generate slug if not manually edited
-const handleNameChange = (value) => {
+const handleNameChange = (value: any) => {
   setName(value);
   
   // Only auto-generate slug if user hasn't manually edited it
@@ -60,7 +60,7 @@ const handleNameChange = (value) => {
 };
 
 // Handle slug change - mark as edited manually
-const handleSlugChange = (value) => {
+const handleSlugChange = (value: any) => {
   setSlug(value);
   setIsSlugEdited(true);
 };

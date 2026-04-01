@@ -46,13 +46,13 @@ export default function BlogPage() {
     setOpenSheet(true);
   };
 
-  const handleEdit = (record: Blog) => {
+  const handleEdit = (record: any) => {
     setMode("edit");
     setSelectedRecord(record);
     setOpenSheet(true);
   };
 
-  const handleDelete = (record: Blog) => {
+  const handleDelete = (record: any) => {
     setSelectedRecord(record);
     setOpenDeleteDialog(true);
   };

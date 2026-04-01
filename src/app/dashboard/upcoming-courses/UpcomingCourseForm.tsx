@@ -60,7 +60,6 @@ export default function UpcomingCourseForm({
     batch_start: record?.batch_start ?? "",
     demo_date: record?.demo_date ?? "",
     demo_duration: record?.demo_duration ?? "",
-    classes: record?.classes ?? "",
     id: record?.id ?? 0,
   };
 

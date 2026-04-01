@@ -30,7 +30,7 @@ export const categoryReducer = (state = initialState, action : any) => {
       };
     }
      case UPDATE_CATEGORY_SUCCESS: {
-      const updatedList = state.categoryData.map((list) =>
+      const updatedList = state.categoryData.map((list: any) =>
                 list?.id === action.response?.id ? action.response : list
       );
       return {
@@ -39,7 +39,7 @@ export const categoryReducer = (state = initialState, action : any) => {
       };
     }
  case DELETE_CATEGORY_SUCCESS: {
-      const updatedList = state.categoryData.filter((list) =>
+      const updatedList = state.categoryData.filter((list: any) =>
                 list?.id !== action.response       );
       return {
         ...state,

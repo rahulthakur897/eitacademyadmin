@@ -89,9 +89,6 @@ export const upcomingCourseForm = (values: UpcomingCourse) => {
     errors.faculty_id = "Instructor is required";
   }
 
-  if (!values.level) {
-    errors.level = "Level is required";
-  }
 
   if (!values.batch_start) {
     errors.batch_start = "Start date is required";

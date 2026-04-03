@@ -152,52 +152,70 @@ export default function DataTable({
 
                     return (
                       <TableCell key={col.colname} className="text-gray-800">
-                        {(col.colname === "name" && col?.colname !== "image") && (
+
+                        {/* NAME COLUMN */}
+                        {col.colname === "name" && (
                           <div className="flex items-center gap-3">
                             <img
                               src={
-                                item.course_logo
+                                item?.course_logo
                                   ? `/assets/images/course/${item.course_logo}`
                                   : "/assets/images/icons/upload.png"
                               }
-                              alt={value}
-                              className="w-10 h-10 object-cover"
+                              alt={value || "image"}
+                              className="w-10 h-10 object-cover rounded"
                             />
-                            <span className="font-medium text-gray-900">{value}</span>
+                            <span className="font-medium text-gray-900">
+                              {value || "-"}
+                            </span>
                           </div>
                         )}
+
                         {col.colname === "image" && (
                           <div className="flex items-center gap-3">
                             <img
                               src={
-                                item.image
+                                item?.image
                                   ? `/assets/images/blog/${item.image}`
                                   : "/assets/images/icons/upload.png"
-                                  
                               }
-                              alt={value}
-                              className="w-10 h-10 object-cover"
+                              alt={value || "image"}
+                              className="w-10 h-10 object-cover rounded"
                             />
                           </div>
                         )}
+
+                        {/* DESCRIPTION */}
                         {col.colname === "shortdesc" && (
-                          <div className="w-[350px] break-words whitespace-normal break-all"
-                            dangerouslySetInnerHTML={{ __html: value }} />
-                        )
-                        }
-                        {col.colname !== "action" && col.colname !== "name" && col.colname !== "shortdesc" &&
-                          col.colname !== "batch_start" && col.colname !== "demo_date" && col.colname !== "image" && (value ?? "-")}
+                          <div
+                            className="w-[350px] break-words whitespace-normal break-all"
+                            dangerouslySetInnerHTML={{ __html: value }}
+                          />
+                        )}
+
+                        {/* DATE */}
                         {(col.colname === "batch_start" || col.colname === "demo_date") && (
                           <span className="text-sm">
-                            {moment(value).format("DD MMM, YYYY")}
+                            {value ? moment(value).format("DD MMM, YYYY") : "-"}
                           </span>
                         )}
 
+                        {/* NORMAL TEXT */}
+                        {col.colname !== "action" &&
+                          col.colname !== "name" &&
+                          col.colname !== "shortdesc" &&
+                          col.colname !== "batch_start" &&
+                          col.colname !== "demo_date" &&
+                          col.colname !== "image" &&
+                          (value ?? "-")}
+
+                        {/* ACTION */}
                         {col.colname === "action" && (
                           <div>
                             <RowActions row={item} />
                           </div>
                         )}
+
                       </TableCell>
                     );
                   })}

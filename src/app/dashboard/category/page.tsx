@@ -24,7 +24,7 @@ useEffect(() => {
   }, [dispatch]);
 
   // FILTER SEARCH
-  const filteredData = (categoryData || [])?.filter((item) =>
+  const filteredData = (categoryData || [])?.filter((item: any) =>
     item?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

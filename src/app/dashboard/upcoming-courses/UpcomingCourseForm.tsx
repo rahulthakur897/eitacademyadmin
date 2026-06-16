@@ -64,6 +64,7 @@ export default function UpcomingCourseForm({
     batch_start: record?.batch_start ?? "",
     demo_date: record?.demo_date ?? "",
     demo_duration: record?.demo_duration ?? "",
+    classes: record?.classes ?? "",
     id: record?.id ?? 0,
   };
 
@@ -234,6 +235,13 @@ export default function UpcomingCourseForm({
                     }
                   />
 
+                  <Input
+                    fieldLabel="Classes"
+                    value={formik.values.classes}
+                    onChange={(e) =>
+                      formik.setFieldValue("classes", e.target.value)
+                    }
+                  />
                 </div>
 
                 {/* ACTIONS */}

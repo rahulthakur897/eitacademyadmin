@@ -31,6 +31,8 @@ interface Props {
   record: any;
   onClose: () => void;
   onSave: (data: UpcomingCourse) => void;
+  courses: any[];
+  categories: any[];
   instructors: any[];
 }
 
@@ -40,6 +42,8 @@ export default function UpcomingCourseForm({
   record,
   onClose,
   onSave,
+  courses,
+  categories,
   instructors,
 }: Props) {
   const dispatch = useDispatch();

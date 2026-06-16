@@ -44,6 +44,7 @@ export interface UpcomingCourse {
   batch_start: string;
   demo_date: string;
   demo_duration: string;
+  classes: string;
 }
 
 export interface Blog {

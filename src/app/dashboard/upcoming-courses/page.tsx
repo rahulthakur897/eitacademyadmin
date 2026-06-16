@@ -138,6 +138,8 @@ export default function UpcomingCourse() {
                 record={selectedRecord}
                 onClose={() => setOpenSheet(false)}
                 onSave={handleSave}
+                courses={[]}
+                categories={[]}
                 instructors={instructorList}
             />
 
